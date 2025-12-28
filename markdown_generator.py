@@ -2,8 +2,7 @@ from typing import List
 from pathlib import Path
 from datetime import datetime
 from code_structure_extractor import Symbol
-from llm_summary import async_generate_llm_summaries
-from tqdm import tqdm
+from llm_summary import summarize_code_in_markdown
 import asyncio
 
 async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Symbol]) -> str:
@@ -21,20 +20,21 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
     # Symbols
     md_lines.append("# Symbols")
 
-    codes = [s.code for s in symbols]
-    summaries = await async_generate_llm_summaries(codes)
     
-    for s, summary in zip(symbols, summaries):
+    for s in symbols:
         md_lines.append(f"## {s.name}")
         md_lines.append(f"- is a {s.kind}")
         if s.parent:
             md_lines.append(f"- parent: {s.parent}")
         md_lines.append(f"- defined on line {s.start_line}")
         md_lines.append("### Summary")
-        md_lines.append(summary)
+        md_lines.append(s.code)
         md_lines.append("") # Spacing
 
     md = "\n".join(md_lines)
+
+    md = await summarize_code_in_markdown(md)
+
     return md
 
 def save_markdown(file_path: str, markdown_content: str, output_dir: str = "docs"):
