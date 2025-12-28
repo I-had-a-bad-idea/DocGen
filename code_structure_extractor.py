@@ -29,6 +29,7 @@ class Symbol:
     kind: str
     parent: Optional[str]
     start_line: int
+    code: str
 
 def parse_code(code: str, language_name):
     if not language_name:
@@ -58,15 +59,16 @@ def parse_file(file_path: str):
 
     root_node = parse_code(code, language_name)
 
-    return root_node, language_name
+    return root_node, language_name, code
 
-def extract_symbols(node, language_name, parent=None) -> List[Symbol]:
+def extract_symbols(node, language_name, code, parent=None) -> List[Symbol]:
     symbols: List[Symbol] = []
     rules = EXTRACTION_RULES[language_name]
 
     node_type = node.type
     name_node = node.child_by_field_name("name")
     start_point = node.start_point[0] + 1
+    code_snippet = code[node.start_byte-1:node.end_byte-2]
 
 
     # Class detection
@@ -76,9 +78,8 @@ def extract_symbols(node, language_name, parent=None) -> List[Symbol]:
 
     if node_type in class_types and name_node:
         name = name_node.text.decode()
-        symbols.append(Symbol(name, "class", parent, start_point))
+        symbols.append(Symbol(name, "class", parent, start_point, code_snippet))
         parent = name   # update parent context
-    
 
     # Function detection
     function_types = rules["function"]
@@ -87,11 +88,10 @@ def extract_symbols(node, language_name, parent=None) -> List[Symbol]:
 
     if node_type in function_types and name_node:
         name = name_node.text.decode()
-        symbols.append(Symbol(name, "function", parent, start_point))
+        symbols.append(Symbol(name, "function", parent, start_point, code_snippet))
         parent = name   # update parent context
 
-
-    # Varibale detection (only top-level)
+    # Variable detection (only top-level)
     variable_types = rules["variable"]
     if isinstance(variable_types, str):
         variable_types = [variable_types]
@@ -101,19 +101,18 @@ def extract_symbols(node, language_name, parent=None) -> List[Symbol]:
 
         if name_node:
             name = name_node.text.decode()
-            symbols.append(Symbol(name, "variable", None, start_point))
+            symbols.append(Symbol(name, "variable", None, start_point, code_snippet))
     
     # Traverse children
     for child in node.children:
-        symbols.extend(extract_symbols(child, language_name, parent))
+        symbols.extend(extract_symbols(child, language_name, code, parent))
 
     return symbols
-    
 
 def print_symbols(symbols: List[Symbol]):
     for s in symbols:
         parent = f"(parent: {s.parent})" if s.parent else ""
-        print(f"{s.kind:8} {s.name} {parent} [line {s.start_line}]")
+        print(f"{s.kind:8} {s.name} {parent} [line {s.start_line}] (code: {s.code})")
 
 def print_tree(node, indent=0):
     print("  " * indent + f"{node.type}")
@@ -121,6 +120,6 @@ def print_tree(node, indent=0):
         print_tree(child, indent + 1)
 
 def code_structure_of_file(path: str):
-    root_node, language_name = parse_file(path)
-    symbols = extract_symbols(root_node, language_name)
+    root_node, language_name, code = parse_file(path)
+    symbols = extract_symbols(root_node, language_name, code)
     return symbols
