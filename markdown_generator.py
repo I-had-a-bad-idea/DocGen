@@ -8,8 +8,10 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
     md_lines = []
 
     # Header
-    md_lines.append(f"# **Documentation for `{Path(file_path).name}`**")
-    md_lines.append(f"> _Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_\n")
+    header_lines = []
+    header_lines.append(f"# **Documentation for `{Path(file_path).name}`**")
+    header_lines.append(f"> _Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_\n")
+    header_lines.append(f"> _Generated with DocGEn, may include wrong information!_")
     
     # Overview
     md_lines.append("# Overview")
@@ -31,8 +33,9 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
         md_lines.append("") # Spacing
 
     md = "\n".join(md_lines)
+    header = "\n".join(header_lines)
 
-    md = await summarize_code_in_markdown(md)
+    md = header + await summarize_code_in_markdown(md)
 
     return md
 
