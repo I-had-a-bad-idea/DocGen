@@ -3,7 +3,7 @@ Generate documentation files from your source code.
 
 Dependencies:
 
-pip install tree_sitter_language-pack datetime
+pip install tree_sitter_language-pack datetime ollama tqdm
 
 
 Usage:

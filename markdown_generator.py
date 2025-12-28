@@ -2,32 +2,38 @@ from typing import List
 from pathlib import Path
 from datetime import datetime
 from code_structure_extractor import Symbol
+from llm_summary import generate_llm_summary
+from tqdm import tqdm
 
 def generate_markdown_from_symbols(file_path: str, symbols: List[Symbol]) -> str:
 
     md_lines = []
 
     # Header
-    md_lines.append(f"# Documentation for `{Path(file_path).name}`")
+    md_lines.append(f"# **Documentation for `{Path(file_path).name}`**")
     md_lines.append(f"> _Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_\n")
 
     # Overview
-    md_lines.append("## Overview")
+    md_lines.append("# Overview")
     md_lines.append("This file contains the following symbols and definitions.")
     md_lines.append("")
 
     # Symbols
-    md_lines.append("## Symbols")
+    md_lines.append("# Symbols")
 
-    for s in symbols:
-        md_lines.append(f"### {s.name}")
+    for s in tqdm(symbols, unit="symbols"):
+        md_lines.append(f"## {s.name}")
         
         md_lines.append(f"- is a {s.kind}")
         if s.parent:
             md_lines.append(f"- parent: {s.parent}")
         md_lines.append(f"- defined on line {s.start_line}")
         
+        md_lines.append("### Summary")
+        md_lines.append(generate_llm_summary(s.code))
+
         md_lines.append("") # Spacing
+    
     
     md =  "\n".join(md_lines)
 
