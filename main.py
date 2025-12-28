@@ -1,4 +1,4 @@
-from code_structure_extractor import code_structure_of_file, print_symbols
+from code_structure_extractor import code_structure_of_file
 import sys
 import os
 from markdown_generator import generate_markdown
