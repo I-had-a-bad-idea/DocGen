@@ -1,5 +1,7 @@
 from tree_sitter_language_pack import get_parser
 from pathlib import Path
+from dataclasses import dataclass
+from typing import Optional
 
 LANGUAGES = {
     ".py": "python",
@@ -7,6 +9,26 @@ LANGUAGES = {
 }
 
 _PARSERS = {}
+
+EXTRACTION_RULES = {
+    "python": {
+        "class": "class_definition",
+        "function": "function_definition",
+        "variable": "assignment",
+    },
+    "rust": {
+        "class": ["struct_item", "enum_item"],
+        "function": "function_item",
+        "variable": "constant_item",
+    },
+}
+
+@dataclass
+class Symbol:
+    name: str
+    kind: str
+    parent: Optional[str]
+    start_line = int
 
 def parse_code(code: str, language_name):
     if not language_name:
