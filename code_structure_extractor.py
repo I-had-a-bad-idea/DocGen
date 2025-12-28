@@ -2,6 +2,7 @@ from tree_sitter_language_pack import get_parser
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional, List
+from tqdm import tqdm
 
 LANGUAGES = {
     ".py": "python",
@@ -23,6 +24,8 @@ EXTRACTION_RULES = {
     },
 }
 
+errors : list[str] = []
+
 @dataclass
 class Symbol:
     name: str
@@ -33,7 +36,8 @@ class Symbol:
 
 def parse_code(code: str, language_name):
     if not language_name:
-        raise ValueError("Unsupported language")
+        errors.append("Unsupported language")
+        return
 
     parser = get_cached_parser(language_name)
 
@@ -53,7 +57,8 @@ def parse_file(file_path: str):
     language_name = LANGUAGES.get(path.suffix)
 
     if not language_name:
-        raise ValueError(f"Unsupported file type: {path.suffix}")
+        errors.append(f"Unsupported file type: {path.suffix}")
+        return None, None, None
 
     code = path.read_text(encoding="utf-8")
 
@@ -62,6 +67,9 @@ def parse_file(file_path: str):
     return root_node, language_name, code
 
 def extract_symbols(node, language_name, code, parent=None) -> List[Symbol]:
+    if not node:
+        return []
+    
     symbols: List[Symbol] = []
     rules = EXTRACTION_RULES[language_name]
 
@@ -112,14 +120,16 @@ def extract_symbols(node, language_name, code, parent=None) -> List[Symbol]:
 def print_symbols(symbols: List[Symbol]):
     for s in symbols:
         parent = f"(parent: {s.parent})" if s.parent else ""
-        print(f"{s.kind:8} {s.name} {parent} [line {s.start_line}] (code: {s.code})")
+        tqdm.write(f"{s.kind:8} {s.name} {parent} [line {s.start_line}] (code: {s.code})")
 
 def print_tree(node, indent=0):
-    print("  " * indent + f"{node.type}")
+    tqdm.write("  " * indent + f"{node.type}")
     for child in node.children:
         print_tree(child, indent + 1)
 
 def code_structure_of_file(path: str):
     root_node, language_name, code = parse_file(path)
     symbols = extract_symbols(root_node, language_name, code)
+    with open("errors.log", "a") as f:
+        f.write("\n".join(errors))
     return symbols

@@ -17,7 +17,9 @@ async def generate_docs_for_folder(folder_path):
 
 
         if os.path.isfile(element_path):
-            await generate_markdown(element_path, code_structure_of_file(element_path))
+            symbols = code_structure_of_file(element_path)
+            if symbols:
+                await generate_markdown(element_path, code_structure_of_file(element_path))
 
         elif os.path.isdir(element_path):
             await generate_docs_for_folder(element_path)
