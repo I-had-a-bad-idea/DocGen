@@ -1,7 +1,7 @@
 from tree_sitter_language_pack import get_parser
 from pathlib import Path
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
 LANGUAGES = {
     ".py": "python",
@@ -28,7 +28,7 @@ class Symbol:
     name: str
     kind: str
     parent: Optional[str]
-    start_line = int
+    start_line: int
 
 def parse_code(code: str, language_name):
     if not language_name:
@@ -58,7 +58,62 @@ def parse_file(file_path: str):
 
     root_node = parse_code(code, language_name)
 
-    return root_node
+    return root_node, language_name
+
+def extract_symbols(node, language_name, parent=None) -> List[Symbol]:
+    symbols: List[Symbol] = []
+    rules = EXTRACTION_RULES[language_name]
+
+    node_type = node.type
+    name_node = node.child_by_field_name("name")
+    start_point = node.start_point[0] + 1
+
+
+    # Class detection
+    class_types = rules["class"]
+    if isinstance(class_types, str): 
+        class_types = [class_types] # Make list
+
+    if node_type in class_types and name_node:
+        name = name_node.text.decode()
+        symbols.append(Symbol(name, "class", parent, start_point))
+        parent = name   # update parent context
+    
+
+    # Function detection
+    function_types = rules["function"]
+    if isinstance(function_types, str):
+        function_types = [function_types] # Make list
+
+    if node_type in function_types and name_node:
+        name = name_node.text.decode()
+        symbols.append(Symbol(name, "function", parent, start_point))
+        parent = name   # update parent context
+
+
+    # Varibale detection (only top-level)
+    variable_types = rules["variable"]
+    if isinstance(variable_types, str):
+        variable_types = [variable_types]
+    
+    if node_type in variable_types and parent is None:
+        name_node = node.child_by_field_name("left") or name_node
+
+        if name_node:
+            name = name_node.text.decode()
+            symbols.append(Symbol(name, "variable", None, start_point))
+    
+    # Traverse children
+    for child in node.children:
+        symbols.extend(extract_symbols(child, language_name, parent))
+
+    return symbols
+    
+
+def print_symbols(symbols: List[Symbol]):
+    for s in symbols:
+        parent = f"(parent: {s.parent})" if s.parent else ""
+        print(f"{s.kind:8} {s.name} {parent} [line {s.start_line}]")
 
 def print_tree(node, indent=0):
     print("  " * indent + f"{node.type}")
