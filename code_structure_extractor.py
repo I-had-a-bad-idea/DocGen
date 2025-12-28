@@ -121,6 +121,6 @@ def print_tree(node, indent=0):
         print_tree(child, indent + 1)
 
 def code_structure_of_file(path: str):
-    root_node, language_name = parse_file("test_files/wgg_chatbot.py")
+    root_node, language_name = parse_file(path)
     symbols = extract_symbols(root_node, language_name)
     return symbols
