@@ -3,7 +3,6 @@ from pathlib import Path
 from datetime import datetime
 from code_structure_extractor import Symbol
 from llm_summary import summarize_code_in_markdown
-import asyncio
 
 async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Symbol]) -> str:
     md_lines = []
@@ -27,7 +26,7 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
         if s.parent:
             md_lines.append(f"- parent: {s.parent}")
         md_lines.append(f"- defined on line {s.start_line}")
-        md_lines.append("### Summary")
+        md_lines.append("### Code")
         md_lines.append(s.code)
         md_lines.append("") # Spacing
 
@@ -45,9 +44,9 @@ def save_markdown(file_path: str, markdown_content: str, output_dir: str = "docs
     md_file = Path(f"{output_path}/{Path(file_path).stem}.md")
     md_file.write_text(markdown_content, encoding="utf-8")
 
-def generate_markdown(file_path: str, symbols: List[Symbol]):
+async def generate_markdown(file_path: str, symbols: List[Symbol]):
 
-    md = asyncio.run(generate_markdown_from_symbols_async(file_path, symbols))
+    md = await generate_markdown_from_symbols_async(file_path, symbols)
     save_markdown(file_path, md)
 
     
