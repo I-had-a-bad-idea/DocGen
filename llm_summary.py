@@ -17,10 +17,13 @@ Dont write stuff like "here is..."
 
 ollama = AsyncClient()
 
+OPTIONS = {
+    "temperature": 0.1,
+}
 
 async def summarize_code_in_markdown(markdown: str) -> str:
     prompt = BASE_PROMPT + "\n\n" + markdown
-    resp = await ollama.generate(MODEL, prompt)
+    resp = await ollama.generate(MODEL, prompt, options=OPTIONS)
     response = resp.response
 
     return response
