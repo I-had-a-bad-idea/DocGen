@@ -44,23 +44,33 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     md_lines = [header, ""]  # Start with header and a blank line
 
     doc.symbols.sort(key=lambda s: s.start_line)
+    
+    # Helper to create a colored badge for kind
+    def kind_badge(kind: str) -> str:
+        colors = {
+            "class": "blue",
+            "function": "green",
+            "variable": "orange",
+        }
+        color = colors.get(kind.lower(), "gray")
+        return f"<span style='background-color:{color}; color:white; padding:2px 6px; border-radius:4px;'>{kind}</span>"
 
     for s in doc.symbols:
-        md_lines.append(f"<details>")
-        md_lines.append(f"  <summary>**{s.name}** ({s.kind})</summary>\n")
-        md_lines.append(f"  - **Defined on line:** `{s.start_line}`")
+        md_lines.append(f"<details style='margin-bottom: 10px;'>")
+        md_lines.append(f"  <summary>**{s.name}** {kind_badge(s.kind)}</summary>\n")
+        md_lines.append(f"  - **Defined on line:** `<code>{s.start_line}</code>`")
         if s.parent:
-            md_lines.append(f"  - **Parent:** `{s.parent}`")
+            md_lines.append(f"  - **Parent:** `<code>{s.parent}</code>`")
         md_lines.append("")  # blank line before summaries
 
-        md_lines.append(f"  ### High-Level Summary")
-        md_lines.append(f"  {s.high_level_summary}\n")
+        md_lines.append(f"  <h4>High-Level Summary</h4>")
+        md_lines.append(f"  <p>{s.high_level_summary}</p>")
 
-        md_lines.append(f"  ### Low-Level Summary")
-        md_lines.append(f"  {s.low_level_summary}\n")
+        md_lines.append(f"  <h4>Low-Level Summary</h4>")
+        md_lines.append(f"  <p>{s.low_level_summary}</p>")
 
         md_lines.append(f"</details>")
-        md_lines.append("---")  # horizontal rule between symbols
+        md_lines.append("<hr>")  # horizontal rule between symbols
 
     return "\n".join(md_lines)
 
