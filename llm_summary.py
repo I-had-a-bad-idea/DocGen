@@ -1,4 +1,5 @@
 from ollama import AsyncClient
+from pydantic import BaseModel
 
 MODEL = "deepseek-r1:1.5b"
 
@@ -14,6 +15,16 @@ Dont use markdown blocks (```markdown ```)
 Dont write stuff like "here is..."
 """
 
+class Symbol:
+    name: str
+    type: str
+    parent: str
+    high_level_summary: str
+    low_level_summary: str
+
+class Documentation(BaseModel):
+    symbols: list[Symbol]
+
 
 ollama = AsyncClient()
 
@@ -25,9 +36,13 @@ OPTIONS = {
 
 }
 
-async def summarize_code_in_markdown(markdown: str) -> str:
+async def summarize_code_in_markdown(markdown: str) -> Documentation:
     prompt = BASE_PROMPT + "\n\n" + markdown
-    resp = await ollama.generate(MODEL, prompt, options=OPTIONS)
-    response = resp.response
+    resp = await ollama.generate(MODEL,
+                                 prompt,
+                                 options=OPTIONS,
+                                 format=Documentation.model_json_schema())
+    
+    response = Documentation.model_validate_json(resp.message.content) # type: ignore
 
     return response
