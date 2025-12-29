@@ -79,7 +79,7 @@ async def summarize_code_in_markdown(input: Input) -> Documentation:
 
     tasks = [summarize_code_in_chunk(Input(symbols=chunk)) for chunk in chunks]
 
-    for summary in tqdm_asyncio.as_completed(tasks, total=len(tasks), desc="Processing chunks", unit=" chunks"):
+    for summary in tqdm_asyncio.as_completed(tasks, total=len(tasks), desc="Processing chunks", unit="chunk"):
         result: Documentation = await summary
         doc.symbols.extend(result.symbols)
 
