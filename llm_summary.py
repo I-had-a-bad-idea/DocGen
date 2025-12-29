@@ -4,18 +4,34 @@ from pydantic import BaseModel
 MODEL = "deepseek-r1:1.5b"
 
 BASE_PROMPT = """
-In the given markdown REPLACE all code blocks with an SUMMARY of them.
-The summary should include a DETAILED high-level and an even more DETAILED low-level explanation.
-Explain everything in the code (variables, functions, etc.), but dont add hallucinate anything new.
-Use Markdown to make it look good.
-Keep the style.
-Keep the rest as it is.
-Make it detailed.
-Dont use markdown blocks (```markdown ```)
-Dont write stuff like "here is..."
+You are given structured JSON describing code symbols.
+
+For EACH symbol:
+- Analyze the `code`
+- Produce a detailed high-level summary
+- Produce a very detailed low-level summary
+- Do NOT invent new symbols
+- Do NOT modify existing fields
+
+Return ONLY valid JSON matching this schema:
+
+{
+  "symbols": [
+    {
+      "name": "...",
+      "kind": "...",
+      "start_line": 0,
+      "parent": "..." or "",
+      "high_level_summary": "...",
+      "low_level_summary": "..."
+    }
+  ]
+}
+
+Return JSON only. No markdown. No explanations.
 """
 
-class Symbol:
+class SymbolOutput(BaseModel):
     name: str
     kind: str
     start_line: int
@@ -24,7 +40,17 @@ class Symbol:
     low_level_summary: str
 
 class Documentation(BaseModel):
-    symbols: list[Symbol]
+    symbols: list[SymbolOutput]
+
+class SymbolInput(BaseModel):
+    name: str
+    kind: str
+    start_line: int
+    parent: str
+    code: str
+
+class Input(BaseModel):
+    symbols: list[SymbolInput]
 
 
 ollama = AsyncClient()
@@ -37,13 +63,13 @@ OPTIONS = {
 
 }
 
-async def summarize_code_in_markdown(markdown: str) -> Documentation:
-    prompt = BASE_PROMPT + "\n\n" + markdown
+async def summarize_code_in_markdown(input: Input) -> Documentation:
+    prompt = BASE_PROMPT + "\n\nINPUT:\n\n" + input.model_dump_json(indent=2)
     resp = await ollama.generate(MODEL,
-                                 prompt,
+                                 prompt=prompt,
                                  options=OPTIONS,
                                  format=Documentation.model_json_schema())
     
-    response = Documentation.model_validate_json(resp.message.content) # type: ignore
+    response = Documentation.model_validate_json(resp.response)
 
     return response

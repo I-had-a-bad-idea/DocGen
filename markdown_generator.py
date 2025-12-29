@@ -2,10 +2,9 @@ from typing import List
 from pathlib import Path
 from datetime import datetime
 from code_structure_extractor import Symbol
-from llm_summary import summarize_code_in_markdown, Documentation
+from llm_summary import summarize_code_in_markdown, Documentation, Input, SymbolInput
 
 async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Symbol]) -> str:
-    md_lines = []
 
     # Header
     header_lines = []
@@ -20,22 +19,20 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
 
     # Symbols
     header_lines.append("# Symbols")
+    header_lines.append("") # Spacing
 
-    
+    input = Input(symbols=[])
     for s in symbols:
-        md_lines.append(f"## {s.name}")
-        md_lines.append(f"- is a {s.kind}")
-        if s.parent:
-            md_lines.append(f"- parent: {s.parent}")
-        md_lines.append(f"- defined on line {s.start_line}")
-        md_lines.append("### Code")
-        md_lines.append(s.code)
-        md_lines.append("") # Spacing
+        symbol = SymbolInput(name=s.name,
+                             kind=s.kind,
+                             start_line=s.start_line,
+                             parent=s.parent if s.parent else "",
+                             code=s.code)
+        input.symbols.append(symbol)
 
-    md = "\n".join(md_lines)
     header = "\n".join(header_lines)
 
-    doc = await summarize_code_in_markdown(md)
+    doc = await summarize_code_in_markdown(input)
 
     md = generate_markdown_from_doc(doc, header)
 
@@ -49,8 +46,10 @@ def generate_markdown_from_doc(doc: Documentation, header):
         if s.parent:
             md_lines.append(f"- parent: {s.parent}")
         md_lines.append(f"- defined on line {s.start_line}")
+        md_lines.append("") # Spacing
         md_lines.append("### High-Level-Summary")
         md_lines.append(s.high_level_summary)
+        md_lines.append("") # Spacing
         md_lines.append("### Low-Level-Summary")
         md_lines.append(s.low_level_summary)
         md_lines.append("") # Spacing
