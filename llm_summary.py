@@ -18,7 +18,11 @@ Dont write stuff like "here is..."
 ollama = AsyncClient()
 
 OPTIONS = {
-    "temperature": 0.1,
+    "temperature": 0.25,
+    "top_p": 0.5,
+    "repeat_penalty": 1.5,
+    "seed": 42,
+
 }
 
 async def summarize_code_in_markdown(markdown: str) -> str:
