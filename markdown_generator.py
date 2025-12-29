@@ -40,22 +40,21 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
 
 def generate_markdown_from_doc(doc: Documentation, header):
     md_lines = []
+
     for s in doc.symbols:
-        md_lines.append(f"## {s.name}")
-        md_lines.append(f"- is a {s.kind}")
+        md_lines.append(f"<details>\n<summary>**{s.name}** ({s.kind})</summary>\n")
+        md_lines.append(f"- **Defined on line:** {s.start_line}")
         if s.parent:
-            md_lines.append(f"- parent: {s.parent}")
-        md_lines.append(f"- defined on line {s.start_line}")
-        md_lines.append("") # Spacing
-        md_lines.append("### High-Level-Summary")
+            md_lines.append(f"- **Parent:** {s.parent}")
+        md_lines.append("")
+        md_lines.append("### High-Level Summary")
         md_lines.append(s.high_level_summary)
-        md_lines.append("") # Spacing
-        md_lines.append("### Low-Level-Summary")
+        md_lines.append("")
+        md_lines.append("### Low-Level Summary")
         md_lines.append(s.low_level_summary)
-        md_lines.append("") # Spacing
+        md_lines.append("</details>\n")
 
     md = header + "\n".join(md_lines)
-
     return md
 
 
