@@ -32,7 +32,7 @@ Download the model:
 
 ```bash
 
-ollama pull deepseek-r1:1.5b
+ollama pull gemma3:4b-it-q8_0
 
 ```
 

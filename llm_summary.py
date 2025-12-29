@@ -2,14 +2,14 @@ from ollama import AsyncClient
 from pydantic import BaseModel
 from tqdm.asyncio import tqdm_asyncio
 
-MODEL = "qwen2.5-coder:3b"
+MODEL = "gemma3:4b-it-q8_0"
 
 BASE_PROMPT = """
 You are given structured JSON describing code symbols.
 
 For EACH symbol:
 - Analyze the code
-- Produce a high-level and a low-level summary
+- Produce a high-level and a detailed low-level summary
 - Do NOT keep the code
 - Do NOT invent new symbols
 
