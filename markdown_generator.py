@@ -11,15 +11,6 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
     header_lines.append(f"# **Documentation for `{Path(file_path).name}`**")
     header_lines.append(f"> _Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_\n")
     header_lines.append(f"> _Generated with DocGen, may include wrong information!_\n\n")
-    
-    # Overview
-    header_lines.append("# Overview")
-    header_lines.append("This file contains the following symbols and definitions.")
-    header_lines.append("")
-
-    # Symbols
-    header_lines.append("# Symbols")
-    header_lines.append("") # Spacing
 
     input = Input(symbols=[])
     for s in symbols:
@@ -44,7 +35,19 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     md_lines = [header, ""]  # Start with header and a blank line
 
     doc.symbols.sort(key=lambda s: s.start_line)
+
+    # Create a table of contents 
+    md_lines.append("# Table of Contents\n")
+    for s in doc.symbols:
+        # Create an anchor-friendly name (for clickable links)
+        anchor = s.name.lower().replace(" ", "-")
+        md_lines.append(f"- [{s.name}](#{anchor}) `{s.kind}`")
+    md_lines.append("\n---\n")  # separator before detailed sections
     
+    # Symbols
+    md_lines.append("# Symbols")
+    md_lines.append("") # Spacing
+
     # Helper to create a colored badge for kind
     def kind_badge(kind: str) -> str:
         colors = {
@@ -56,6 +59,9 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
         return f"<span style='background-color:{color}; color:white; padding:2px 6px; border-radius:4px;'>{kind}</span>"
 
     for s in doc.symbols:
+        # Create an anchor for linking from overview
+        anchor = s.name.lower().replace(" ", "-")
+        md_lines.append(f"<a id='{anchor}'></a>")
         md_lines.append(f"<details style='margin-bottom: 10px;'>")
         md_lines.append(f"  <summary>**{s.name}** {kind_badge(s.kind)}</summary>\n")
         md_lines.append(f"  - **Defined on line:** `<code>{s.start_line}</code>`")
