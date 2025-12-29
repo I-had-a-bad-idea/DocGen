@@ -82,7 +82,7 @@ def extract_symbols(node, language_name, code, parent=None) -> List[Symbol]:
     node_type = node.type
     name_node = node.child_by_field_name("name")
     start_point = node.start_point[0] + 1
-    code_snippet = code[node.start_byte-1:node.end_byte-2]
+    code_snippet = code[node.start_byte-1:node.end_byte]
 
 
     # Class detection

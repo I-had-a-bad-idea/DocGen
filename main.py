@@ -45,7 +45,7 @@ async def get_files_for_path(path):
 async def generate_docs():
     tasks = [generate_docs_for_file(path) for path in queue]
 
-    for task in tqdm_asyncio.as_completed(tasks, total=len(tasks), desc="Processing files", unit="chunk"):
+    for task in tqdm_asyncio.as_completed(tasks, total=len(tasks), desc="Processing files", unit="file"):
         await task
 
 def main():
