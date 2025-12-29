@@ -2,7 +2,7 @@ from typing import List
 from pathlib import Path
 from datetime import datetime
 from code_structure_extractor import Symbol
-from llm_summary import summarize_code_in_markdown
+from llm_summary import summarize_code_in_markdown, Documentation
 
 async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Symbol]) -> str:
     md_lines = []
@@ -14,12 +14,12 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
     header_lines.append(f"> _Generated with DocGen, may include wrong information!_\n\n")
     
     # Overview
-    md_lines.append("# Overview")
-    md_lines.append("This file contains the following symbols and definitions.")
-    md_lines.append("")
+    header_lines.append("# Overview")
+    header_lines.append("This file contains the following symbols and definitions.")
+    header_lines.append("")
 
     # Symbols
-    md_lines.append("# Symbols")
+    header_lines.append("# Symbols")
 
     
     for s in symbols:
@@ -35,9 +35,30 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
     md = "\n".join(md_lines)
     header = "\n".join(header_lines)
 
-    md = header + await summarize_code_in_markdown(md)
+    doc = await summarize_code_in_markdown(md)
+
+    md = generate_markdown_from_doc(doc, header)
 
     return md
+
+def generate_markdown_from_doc(doc: Documentation, header):
+    md_lines = []
+    for s in doc.symbols:
+        md_lines.append(f"## {s.name}")
+        md_lines.append(f"- is a {s.kind}")
+        if s.parent:
+            md_lines.append(f"- parent: {s.parent}")
+        md_lines.append(f"- defined on line {s.start_line}")
+        md_lines.append("### High-Level-Summary")
+        md_lines.append(s.high_level_summary)
+        md_lines.append("### Low-Level-Summary")
+        md_lines.append(s.low_level_summary)
+        md_lines.append("") # Spacing
+
+    md = header + "\n".join(md_lines)
+
+    return md
+
 
 def save_markdown(file_path: str, markdown_content: str, output_dir: str = "docs"):
 

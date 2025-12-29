@@ -17,7 +17,8 @@ Dont write stuff like "here is..."
 
 class Symbol:
     name: str
-    type: str
+    kind: str
+    start_line: int
     parent: str
     high_level_summary: str
     low_level_summary: str
