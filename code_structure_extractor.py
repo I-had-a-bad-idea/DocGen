@@ -130,6 +130,6 @@ def print_tree(node, indent=0):
 def code_structure_of_file(path: str):
     root_node, language_name, code = parse_file(path)
     symbols = extract_symbols(root_node, language_name, code)
-    with open("errors.log", "a") as f:
+    with open("errors.log", "w") as f:
         f.write("\n".join(errors))
     return symbols
