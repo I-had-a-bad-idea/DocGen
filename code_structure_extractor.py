@@ -46,6 +46,12 @@ def parse_code(code: str, language_name):
 
     return tree.root_node
 
+def get_language_name(path):
+    path = Path(path)
+    language_name = LANGUAGES.get(path.suffix)
+
+    return language_name
+
 def get_cached_parser(language_name):
     if language_name not in _PARSERS:
         _PARSERS[language_name] = get_parser(language_name)
@@ -54,7 +60,7 @@ def get_cached_parser(language_name):
 
 def parse_file(file_path: str):
     path = Path(file_path)
-    language_name = LANGUAGES.get(path.suffix)
+    language_name = get_language_name(file_path)
 
     if not language_name:
         errors.append(f"Unsupported file type: {path.suffix}")

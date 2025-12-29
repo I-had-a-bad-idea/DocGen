@@ -1,4 +1,4 @@
-from code_structure_extractor import code_structure_of_file
+from code_structure_extractor import code_structure_of_file, get_language_name
 import sys
 import os
 from markdown_generator import generate_markdown
@@ -29,7 +29,8 @@ async def get_files_for_folder(folder_path):
         element_path = os.path.join(folder_path, element)
 
         if os.path.isfile(element_path):
-            queue.add(element_path)
+            if get_language_name(element_path):
+                queue.add(element_path)
         elif os.path.isdir(element_path):
             await get_files_for_folder(element_path)
 
@@ -38,7 +39,8 @@ async def get_files_for_path(path):
     if os.path.isdir(path):
         await get_files_for_folder(path)
     elif os.path.isfile(path):
-        queue.add(path)
+        if get_language_name(path):
+            queue.add(path)
 
 async def generate_docs():
     tasks = [generate_docs_for_file(path) for path in queue]
@@ -51,7 +53,7 @@ def main():
         path = sys.argv[1]
         asyncio.run(get_files_for_path(path))
         asyncio.run(generate_docs())
-        print("Generated docs")
+        print("\n\nGenerated docs!")
     else:
         print("Usage: python main.py path_to_folder")
 
