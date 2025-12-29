@@ -1,7 +1,6 @@
 from ollama import AsyncClient
 from pydantic import BaseModel
-import json
-from tqdm import tqdm
+from tqdm.asyncio import tqdm_asyncio
 
 MODEL = "qwen2.5-coder:3b"
 
@@ -76,11 +75,12 @@ async def summarize_code_in_markdown(input: Input) -> Documentation:
     chunk_size = 5
     doc = Documentation(symbols=[])
 
-    # Split input.symbols into chunks of size 5
-    for i in tqdm(range(0, len(input.symbols), chunk_size), desc="Processing chunks", unit=" chunk"):
-        chunk = input.symbols[i:i + chunk_size]
-        chunk_input = Input(symbols=chunk)
-        summary = await summarize_code_in_chunk(chunk_input)
-        doc.symbols.extend(summary.symbols)
+    chunks = [input.symbols[i:i+chunk_size] for i in range(0, len(input.symbols), chunk_size)]
+
+    tasks = [summarize_code_in_chunk(Input(symbols=chunk)) for chunk in chunks]
+
+    for summary in tqdm_asyncio.as_completed(tasks, total=len(tasks), desc="Processing chunks", unit=" chunks"):
+        result: Documentation = await summary
+        doc.symbols.extend(result.symbols)
 
     return doc
