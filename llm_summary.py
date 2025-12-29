@@ -68,7 +68,7 @@ async def summarize_code_in_markdown(input: Input) -> Documentation:
     resp = await ollama.generate(MODEL,
                                  prompt=prompt,
                                  options=OPTIONS,
-                                 format=Documentation.model_json_schema())
+                                 format="json")
     
     response = Documentation.model_validate_json(resp.response)
 
