@@ -46,6 +46,12 @@ def parse_code(code: str, language_name):
 
     return tree.root_node
 
+def get_language_name(path):
+    path = Path(path)
+    language_name = LANGUAGES.get(path.suffix)
+
+    return language_name
+
 def get_cached_parser(language_name):
     if language_name not in _PARSERS:
         _PARSERS[language_name] = get_parser(language_name)
@@ -54,7 +60,7 @@ def get_cached_parser(language_name):
 
 def parse_file(file_path: str):
     path = Path(file_path)
-    language_name = LANGUAGES.get(path.suffix)
+    language_name = get_language_name(file_path)
 
     if not language_name:
         errors.append(f"Unsupported file type: {path.suffix}")
@@ -76,7 +82,7 @@ def extract_symbols(node, language_name, code, parent=None) -> List[Symbol]:
     node_type = node.type
     name_node = node.child_by_field_name("name")
     start_point = node.start_point[0] + 1
-    code_snippet = code[node.start_byte-1:node.end_byte-2]
+    code_snippet = code[node.start_byte-1:node.end_byte]
 
 
     # Class detection
@@ -130,6 +136,6 @@ def print_tree(node, indent=0):
 def code_structure_of_file(path: str):
     root_node, language_name, code = parse_file(path)
     symbols = extract_symbols(root_node, language_name, code)
-    with open("errors.log", "a") as f:
+    with open("errors.log", "w") as f:
         f.write("\n".join(errors))
     return symbols

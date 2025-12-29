@@ -21,7 +21,7 @@ Install python dependencies
 
 ```bash
 
-pip install tree_sitter_language-pack datetime ollama tqdm
+pip install tree_sitter_language-pack datetime ollama tqdm pydantic
 
 ```
 ### Olama + Model
@@ -32,7 +32,7 @@ Download the model:
 
 ```bash
 
-ollama pull deepseek-r1:1.5b
+ollama pull gemma3:4b-it-q8_0
 
 ```
 
