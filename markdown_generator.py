@@ -29,6 +29,8 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
                              parent=s.parent if s.parent else "",
                              code=s.code)
         input.symbols.append(symbol)
+    
+    input.symbols.sort(key=lambda s: s.start_line)
 
     header = "\n".join(header_lines)
 
@@ -38,24 +40,29 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
 
     return md
 
-def generate_markdown_from_doc(doc: Documentation, header):
-    md_lines = []
+def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
+    md_lines = [header, ""]  # Start with header and a blank line
+
+    doc.symbols.sort(key=lambda s: s.start_line)
 
     for s in doc.symbols:
-        md_lines.append(f"<details>\n<summary>**{s.name}** ({s.kind})</summary>\n")
-        md_lines.append(f"- **Defined on line:** {s.start_line}")
+        md_lines.append(f"<details>")
+        md_lines.append(f"  <summary>**{s.name}** ({s.kind})</summary>\n")
+        md_lines.append(f"  - **Defined on line:** `{s.start_line}`")
         if s.parent:
-            md_lines.append(f"- **Parent:** {s.parent}")
-        md_lines.append("")
-        md_lines.append("### High-Level Summary")
-        md_lines.append(s.high_level_summary)
-        md_lines.append("")
-        md_lines.append("### Low-Level Summary")
-        md_lines.append(s.low_level_summary)
-        md_lines.append("</details>\n")
+            md_lines.append(f"  - **Parent:** `{s.parent}`")
+        md_lines.append("")  # blank line before summaries
 
-    md = header + "\n".join(md_lines)
-    return md
+        md_lines.append(f"  ### High-Level Summary")
+        md_lines.append(f"  {s.high_level_summary}\n")
+
+        md_lines.append(f"  ### Low-Level Summary")
+        md_lines.append(f"  {s.low_level_summary}\n")
+
+        md_lines.append(f"</details>")
+        md_lines.append("---")  # horizontal rule between symbols
+
+    return "\n".join(md_lines)
 
 
 def save_markdown(file_path: str, markdown_content: str, output_dir: str = "docs"):
