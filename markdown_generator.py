@@ -36,13 +36,13 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
 
     doc.symbols.sort(key=lambda s: s.start_line)
 
-    # Create a table of contents 
-    md_lines.append("# Table of Contents\n")
-    for s in doc.symbols:
-        # Create an anchor-friendly name (for clickable links)
-        anchor = s.name.lower().replace(" ", "-")
-        md_lines.append(f"- [{s.name}](#{anchor}) `{s.kind}`")
-    md_lines.append("\n---\n")  # separator before detailed sections
+    # # Create a table of contents 
+    # md_lines.append("# Table of Contents\n")
+    # for s in doc.symbols:
+    #     # Create an anchor-friendly name (for clickable links)
+    #     anchor = s.name.lower().replace(" ", "-")
+    #     md_lines.append(f"- [{s.name}](#{anchor}) `{s.kind}`")
+    # md_lines.append("\n---\n")  # separator before detailed sections
     
     # Symbols
     md_lines.append("# Symbols")
@@ -63,7 +63,7 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
         anchor = s.name.lower().replace(" ", "-")
         md_lines.append(f"<a id='{anchor}'></a>")
         md_lines.append(f"<details style='margin-bottom: 10px;'>")
-        md_lines.append(f"  <summary>**{s.name}** {kind_badge(s.kind)}</summary>\n")
+        md_lines.append(f"  <summary> **{s.name}** {kind_badge(s.kind)}</summary>\n")
         md_lines.append(f"  - **Defined on line:** `<code>{s.start_line}</code>`")
         if s.parent:
             md_lines.append(f"  - **Parent:** `<code>{s.parent}</code>`")
