@@ -1,8 +1,6 @@
-from typing import List
 from pathlib import Path
 from datetime import datetime
-from code_structure_extractor import Symbol
-from llm_summary import summarize_code_in_markdown, Documentation, Input, SymbolInput
+from llm_summary import summarize_code_in_markdown, Documentation, Input
 
 async def generate_markdown_from_symbols_async(file_path: str, code: str) -> str:
 

@@ -1,4 +1,3 @@
-from code_structure_extractor import code_structure_of_file, get_language_name
 import sys
 import os
 from markdown_generator import generate_markdown
@@ -8,13 +7,27 @@ import asyncio
 
 queue = set()
 
+LANGUAGES = {
+    ".py": "python",
+    ".rs": "rust",
+}
+
+def get_code_from_file(file_path: str) -> str:
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            code = f.read()
+        return code
+    except Exception as e:
+        print(f"Error reading file {file_path}: {e}")
+        return ""
+
 async def generate_docs_for_file(file_path):
     if not os.path.isfile(file_path):
         print("Not a file")
         return
 
-    symbols, code = code_structure_of_file(file_path)
-    if symbols and code:
+    code = get_code_from_file(file_path)
+    if code:
         await generate_markdown(file_path, code)
 
 
@@ -29,7 +42,7 @@ async def get_files_for_folder(folder_path):
         element_path = os.path.join(folder_path, element)
 
         if os.path.isfile(element_path):
-            if get_language_name(element_path):
+            if LANGUAGES.get(element_path):
                 queue.add(element_path)
         elif os.path.isdir(element_path):
             await get_files_for_folder(element_path)
@@ -39,7 +52,7 @@ async def get_files_for_path(path):
     if os.path.isdir(path):
         await get_files_for_folder(path)
     elif os.path.isfile(path):
-        if get_language_name(path):
+        if LANGUAGES.get(path):
             queue.add(path)
 
 async def generate_docs():

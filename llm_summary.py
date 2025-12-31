@@ -44,13 +44,6 @@ class Documentation(BaseModel):
     overview: str
     symbols: list[SymbolOutput]
 
-class SymbolInput(BaseModel):
-    name: str
-    kind: str
-    start_line: int
-    parent: str
-    code: str
-
 class Input(BaseModel):
     file_path: str
     code: str
