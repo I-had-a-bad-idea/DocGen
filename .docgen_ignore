@@ -1,27 +1,27 @@
 # Markup / rendered content
-*.md
-*.markdown
-*.html
-*.htm
-*.pdf
+.md
+.markdown
+.html
+.htm
+.pdf
 
 # Styles and assets
-*.css
-*.scss
-*.sass
-*.less
-*.map
-*.svg
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.webp
-*.ico
-*.woff
-*.woff2
-*.ttf
-*.eot
+.css
+.scss
+.sass
+.less
+.map
+.svg
+.png
+.jpg
+.jpeg
+.gif
+.webp
+.ico
+.woff
+.woff2
+.ttf
+.eot
 
 # Generated / build output
 dist/
@@ -42,24 +42,24 @@ venv/
 __pycache__/
 
 # Minified / bundled files
-*.min.js
-*.bundle.js
-*.bundle.css
+.min.js
+.bundle.js
+.bundle.css
 
 # Config and metadata
-*.json
-*.yaml
-*.yml
-*.toml
-*.ini
-*.cfg
-*.lock
+.json
+.yaml
+.yml
+.toml
+.ini
+.cfg
+.lock
 
 # Logs and temp files
-*.log
-*.tmp
-*.swp
-*.bak
+.log
+.tmp
+.swp
+.bak
 
 # Tests and examples
 test/

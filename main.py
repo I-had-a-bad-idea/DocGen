@@ -97,10 +97,22 @@ LANGUAGES = {
     ".sql": "SQL"
 }
 
+ignored_languages = []
+ignored_folders = []
+
 def is_supported_language(file_path: str) -> bool:
     path = Path(file_path)
     suffix = path.suffix
+    if suffix in ignored_languages:
+        return False
+    
     return LANGUAGES.get(suffix) != None
+
+def is_allowed_folder(folder_path: str) -> bool:
+    for ignored_folder in ignored_folders:
+        if folder_path.endswith(ignored_folder):
+            return False
+    return True
 
 def get_code_from_file(file_path: str) -> str:
     try:
@@ -135,7 +147,8 @@ async def get_files_for_folder(folder_path):
             if is_supported_language(element_path):
                 queue.add(element_path)
         elif os.path.isdir(element_path):
-            await get_files_for_folder(element_path)
+            if is_allowed_folder(element_path):
+                await get_files_for_folder(element_path)
 
 
 async def get_files_for_path(path):
@@ -151,7 +164,18 @@ async def generate_docs():
     for task in tqdm_asyncio.as_completed(tasks, total=len(tasks), desc="Processing files", unit="file"):
         await task
 
+def load_docgen_ignore():
+    with open(".docgen_ignore") as f:
+        for line in f:
+            line = line.strip()
+            if line.endswith("/"):
+                ignored_folders.append(line)
+            elif line.startswith("."):
+                ignored_languages.append(line)
+
+
 def main():
+    load_docgen_ignore()
     if len(sys.argv) >= 2:
         path = sys.argv[1]
         asyncio.run(get_files_for_path(path))
