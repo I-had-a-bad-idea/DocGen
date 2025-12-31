@@ -1,10 +1,8 @@
-from typing import List
 from pathlib import Path
 from datetime import datetime
-from code_structure_extractor import Symbol
-from llm_summary import summarize_code_in_markdown, Documentation, Input, SymbolInput
+from llm_summary import summarize_code_in_markdown, Documentation, Input
 
-async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Symbol]) -> str:
+async def generate_markdown_from_symbols_async(file_path: str, code: str) -> str:
 
     # Header
     header_lines = []
@@ -12,16 +10,7 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
     header_lines.append(f"> _Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_\n")
     header_lines.append(f"> _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_\n\n")
 
-    input = Input(symbols=[])
-    for s in symbols:
-        symbol = SymbolInput(name=s.name,
-                             kind=s.kind,
-                             start_line=s.start_line,
-                             parent=s.parent if s.parent else "",
-                             code=s.code)
-        input.symbols.append(symbol)
-    
-    input.symbols.sort(key=lambda s: s.start_line)
+    input = Input(code=code, file_path=file_path)
 
     header = "\n".join(header_lines)
 
@@ -44,6 +33,12 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     #     md_lines.append(f"- [{s.name}](#{anchor}) `{s.kind}`")
     # md_lines.append("\n---\n")  # separator before detailed sections
     
+    # Overview
+    md_lines.append("# Overview")
+    md_lines.append(f"**Language**: {doc.language}\n")
+    md_lines.append(doc.overview)
+    md_lines.append("\n---\n")  # separator before detailed sections
+
     # Symbols
     md_lines.append("# Symbols")
     md_lines.append("") # Spacing
@@ -51,9 +46,12 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     # Helper to create a colored badge for kind
     def kind_badge(kind: str) -> str:
         colors = {
-            "class": "blue",
+            "variable": "blue",
             "function": "green",
-            "variable": "orange",
+            "class": "purple",
+            "enum": "orange",
+            "struct": "teal",
+            "module": "brown"
         }
         color = colors.get(kind.lower(), "gray")
         return f"<span style='background-color:{color}; color:white; padding:2px 6px; border-radius:4px;'>{kind}</span>"
@@ -64,9 +62,14 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
         md_lines.append(f"<a id='{anchor}'></a>")
         md_lines.append(f"<details style='margin-bottom: 10px;'>")
         md_lines.append(f"  <summary> **{s.name}** {kind_badge(s.kind)}</summary>\n")
-        md_lines.append(f"  - **Defined on line:** `<code>{s.start_line}</code>`")
+
+        if s.start_line == s.end_line:
+            md_lines.append(f"  - **Defined on line:** {s.start_line}")
+        else:
+            md_lines.append(f"  - **Defined on lines:** {s.start_line}-{s.end_line}")
+
         if s.parent:
-            md_lines.append(f"  - **Parent:** `<code>{s.parent}</code>`")
+            md_lines.append(f"  - **Parent:** {s.parent}")
         md_lines.append("")  # blank line before summaries
 
         md_lines.append(f"  <h4>High-Level Summary</h4>")
@@ -74,6 +77,18 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
 
         md_lines.append(f"  <h4>Low-Level Summary</h4>")
         md_lines.append(f"  <p>{s.low_level_summary}</p>")
+
+        if s.notes:
+            md_lines.append(f"  <h4>Notes</h4>")
+            md_lines.append(f"  <p>{s.notes}</p>")
+
+        if s.examples:
+            md_lines.append(f"<h4>Examples</h4>")
+            md_lines.append("")
+            md_lines.append(f"```{doc.language}")
+            md_lines.append("\n".join(s.examples).strip())
+            md_lines.append("```")
+            md_lines.append("")
 
         md_lines.append(f"</details>")
         md_lines.append("<hr>")  # horizontal rule between symbols
@@ -89,9 +104,9 @@ def save_markdown(file_path: str, markdown_content: str, output_dir: str = "docs
     md_file = Path(f"{output_path}/{Path(file_path).stem}.md")
     md_file.write_text(markdown_content, encoding="utf-8")
 
-async def generate_markdown(file_path: str, symbols: List[Symbol]):
+async def generate_markdown(file_path: str, code: str):
 
-    md = await generate_markdown_from_symbols_async(file_path, symbols)
+    md = await generate_markdown_from_symbols_async(file_path, code)
     save_markdown(file_path, md)
 
     
