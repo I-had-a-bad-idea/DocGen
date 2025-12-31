@@ -1,6 +1,7 @@
 from ollama import AsyncClient
 from pydantic import BaseModel
 from tqdm.asyncio import tqdm_asyncio
+import json
 
 MODEL = "qwen2.5-coder:3b"
 
@@ -17,19 +18,23 @@ Return ONLY valid JSON matching this schema:
 
 {
   "overview": "an_overview_of_the_file",
+  "language:" "the_language_of_the_file",
   "symbols": [
     {
       "name": "the_symbol_name",
       "kind": "the_symbol_lo",
       "start_line": 0,
+      "end_line": 0,
       "parent": "",
       "high_level_summary": "",
       "low_level_summary": ""
+      "examples": ["example1, example2"] | None
+      "notes":  "some_notes" | None
     }
   ]
 }
 
-kind can be: variable, function, class, enum, struct, module
+Examples must be a list of strings.
 
 Return JSON only. No markdown. No explanations.
 """
@@ -38,12 +43,16 @@ class SymbolOutput(BaseModel):
     name: str
     kind: str
     start_line: int
+    end_line: int
     parent: str
     high_level_summary: str
     low_level_summary: str
+    examples: list[str] | None
+    notes: str | None
 
 class Documentation(BaseModel):
     overview: str
+    language: str
     symbols: list[SymbolOutput]
 
 class Input(BaseModel):
@@ -66,6 +75,11 @@ async def summarize_code_in_chunk(input: Input) -> Documentation:
                                  prompt=prompt,
                                  options=OPTIONS,
                                  format="json")
+    
+    parsed = json.loads(resp.response)
+    with open("model_answers.log", "a") as f:
+        json.dump(parsed, f, indent=2)
+        f.write("\n")
 
     response = Documentation.model_validate_json(resp.response)
 
@@ -81,7 +95,7 @@ async def summarize_code_in_markdown(input: Input) -> Documentation:
         ]
     
         doc = Documentation(overview="",
-                            symbols=[])
+                            symbols=[], language="")
         for chunk_input in tqdm_asyncio(codes, desc="Summarizing code chunks", unit="chunk"):
             chunk_doc = await summarize_code_in_chunk(chunk_input)
             doc.overview += chunk_doc.overview + "\n"
