@@ -75,10 +75,10 @@ async def summarize_code_in_chunk(input: Input) -> Documentation:
                                  options=OPTIONS,
                                  format="json")
     
-    parsed = json.loads(resp.response)
-    with open("model_answers.log", "a") as f:
-        json.dump(parsed, f, indent=2)
-        f.write("\n")
+    # parsed = json.loads(resp.response)
+    # with open("model_answers.log", "a") as f:
+    #     json.dump(parsed, f, indent=2)
+    #     f.write("\n")
 
     response = Documentation.model_validate_json(resp.response)
 
