@@ -153,6 +153,7 @@ async def get_files_for_folder(folder_path):
 
 async def get_files_for_path(path):
     if os.path.isdir(path):
+        load_docgen_ignore(path)
         await get_files_for_folder(path)
     elif os.path.isfile(path):
         if is_supported_language(path):
@@ -164,8 +165,10 @@ async def generate_docs():
     for task in tqdm_asyncio.as_completed(tasks, total=len(tasks), desc="Processing files", unit="file"):
         await task
 
-def load_docgen_ignore():
-    with open(".docgen_ignore") as f:
+def load_docgen_ignore(folder: str):
+    folder_path = Path(folder)
+    path = folder_path / ".docgen_ignore"
+    with open(path) as f:
         for line in f:
             line = line.strip()
             if line.endswith("/"):
@@ -175,7 +178,6 @@ def load_docgen_ignore():
 
 
 def main():
-    load_docgen_ignore()
     if len(sys.argv) >= 2:
         path = sys.argv[1]
         asyncio.run(get_files_for_path(path))
