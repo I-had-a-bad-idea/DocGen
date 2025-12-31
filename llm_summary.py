@@ -2,7 +2,7 @@ from ollama import AsyncClient
 from pydantic import BaseModel
 from tqdm.asyncio import tqdm_asyncio
 
-MODEL = "gemma3:4b-it-q8_0"
+MODEL = "qwen2.5-coder:3b"
 
 BASE_PROMPT = """
 You are given structured JSON describing code symbols.
@@ -57,6 +57,7 @@ ollama = AsyncClient()
 
 OPTIONS = {
     "temperature": 0.1,
+    "num_ctx": 32768, # 32.768
 
 }
 
