@@ -13,9 +13,9 @@ async def generate_docs_for_file(file_path):
         print("Not a file")
         return
 
-    symbols = code_structure_of_file(file_path)
-    if symbols:
-        await generate_markdown(file_path, symbols)
+    symbols, code = code_structure_of_file(file_path)
+    if symbols and code:
+        await generate_markdown(file_path, code)
 
 
 async def get_files_for_folder(folder_path):

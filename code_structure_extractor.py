@@ -138,4 +138,4 @@ def code_structure_of_file(path: str):
     symbols = extract_symbols(root_node, language_name, code)
     with open("errors.log", "w") as f:
         f.write("\n".join(errors))
-    return symbols
+    return symbols, code

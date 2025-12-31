@@ -4,7 +4,7 @@ from datetime import datetime
 from code_structure_extractor import Symbol
 from llm_summary import summarize_code_in_markdown, Documentation, Input, SymbolInput
 
-async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Symbol]) -> str:
+async def generate_markdown_from_symbols_async(file_path: str, code: str) -> str:
 
     # Header
     header_lines = []
@@ -12,16 +12,16 @@ async def generate_markdown_from_symbols_async(file_path: str, symbols: List[Sym
     header_lines.append(f"> _Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_\n")
     header_lines.append(f"> _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_\n\n")
 
-    input = Input(symbols=[])
-    for s in symbols:
-        symbol = SymbolInput(name=s.name,
-                             kind=s.kind,
-                             start_line=s.start_line,
-                             parent=s.parent if s.parent else "",
-                             code=s.code)
-        input.symbols.append(symbol)
+    input = Input(code=code, file_path=file_path)
+    # for s in symbols:
+    #     symbol = SymbolInput(name=s.name,
+    #                          kind=s.kind,
+    #                          start_line=s.start_line,
+    #                          parent=s.parent if s.parent else "",
+    #                          code=s.code)
+    #     input.symbols.append(symbol)
     
-    input.symbols.sort(key=lambda s: s.start_line)
+    # input.symbols.sort(key=lambda s: s.start_line)
 
     header = "\n".join(header_lines)
 
@@ -44,6 +44,10 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     #     md_lines.append(f"- [{s.name}](#{anchor}) `{s.kind}`")
     # md_lines.append("\n---\n")  # separator before detailed sections
     
+    # Overview
+    md_lines.append("# Overview")
+    md_lines.append(doc.overview)
+
     # Symbols
     md_lines.append("# Symbols")
     md_lines.append("") # Spacing
@@ -89,9 +93,9 @@ def save_markdown(file_path: str, markdown_content: str, output_dir: str = "docs
     md_file = Path(f"{output_path}/{Path(file_path).stem}.md")
     md_file.write_text(markdown_content, encoding="utf-8")
 
-async def generate_markdown(file_path: str, symbols: List[Symbol]):
+async def generate_markdown(file_path: str, code: str):
 
-    md = await generate_markdown_from_symbols_async(file_path, symbols)
+    md = await generate_markdown_from_symbols_async(file_path, code)
     save_markdown(file_path, md)
 
     

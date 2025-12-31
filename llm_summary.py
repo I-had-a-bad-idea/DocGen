@@ -16,6 +16,7 @@ For EACH symbol:
 Return ONLY valid JSON matching this schema:
 
 {
+  "overview": "an_overview_of_the_file",
   "symbols": [
     {
       "name": "the_symbol_name",
@@ -40,6 +41,7 @@ class SymbolOutput(BaseModel):
     low_level_summary: str
 
 class Documentation(BaseModel):
+    overview: str
     symbols: list[SymbolOutput]
 
 class SymbolInput(BaseModel):
@@ -50,14 +52,16 @@ class SymbolInput(BaseModel):
     code: str
 
 class Input(BaseModel):
-    symbols: list[SymbolInput]
+    file_path: str
+    code: str
 
+MAX_TOKENS = 32768 # 32.768
 
 ollama = AsyncClient()
 
 OPTIONS = {
     "temperature": 0.1,
-    "num_ctx": 32768, # 32.768
+    "num_ctx": MAX_TOKENS, 
 
 }
 
@@ -73,15 +77,22 @@ async def summarize_code_in_chunk(input: Input) -> Documentation:
     return response
 
 async def summarize_code_in_markdown(input: Input) -> Documentation:
-    chunk_size = 5
-    doc = Documentation(symbols=[])
+    code = input.code
+    if len(code) > MAX_TOKENS:
+        codes = [
+            Input(file_path=input.file_path,
+                  code=code[i:i+MAX_TOKENS])
+            for i in range(0, len(code), MAX_TOKENS)
+        ]
+    
+        doc = Documentation(overview="",
+                            symbols=[])
+        for chunk_input in tqdm_asyncio(codes, desc="Summarizing code chunks", unit="chunk"):
+            chunk_doc = await summarize_code_in_chunk(chunk_input)
+            doc.overview += chunk_doc.overview + "\n"
+            doc.symbols.extend(chunk_doc.symbols)
+        
+        return doc
+    
+    return await summarize_code_in_chunk(input)
 
-    chunks = [input.symbols[i:i+chunk_size] for i in range(0, len(input.symbols), chunk_size)]
-
-    tasks = [summarize_code_in_chunk(Input(symbols=chunk)) for chunk in chunks]
-
-    for summary in tqdm_asyncio.as_completed(tasks, total=len(tasks), desc="Processing chunks", unit="chunk"):
-        result: Documentation = await summary
-        doc.symbols.extend(result.symbols)
-
-    return doc
