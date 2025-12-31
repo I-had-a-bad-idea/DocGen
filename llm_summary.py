@@ -28,13 +28,12 @@ Return ONLY valid JSON matching this schema:
       "parent": "",
       "high_level_summary": "",
       "low_level_summary": ""
-      "examples": ["example1, example2"] | None
-      "notes":  "some_notes" | None
+      "examples": ["example1, example2"]
+      "notes":  "some_notes"
     }
   ]
 }
 
-Examples must be a list of strings.
 
 Return JSON only. No markdown. No explanations.
 """

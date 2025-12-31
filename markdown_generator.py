@@ -83,11 +83,10 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
             md_lines.append(f"  <p>{s.notes}</p>")
 
         if s.examples:
-            md_lines.append(f"  <h4>Examples</h4>")
+            md_lines.append(f"<h4>Examples</h4>")
+            md_lines.append("")
             md_lines.append(f"```{doc.language}")
-            md_lines.append("")
-            md_lines.append("\n".join(s.examples))
-            md_lines.append("")
+            md_lines.append("\n".join(s.examples).strip())
             md_lines.append("```")
             md_lines.append("")
 
