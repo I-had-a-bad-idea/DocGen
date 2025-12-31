@@ -19,7 +19,7 @@ It uses local Ollama to understand your code and create Markdown files for them.
 
 ## Features
 
-- Supports multiple programming languages (Python, JavaScript, TypeScript, Go, Rust, Java, C, C++, C#, PHP, Ruby, HTML, CSS, Shell Script, and more).
+- Supports multiple programming languages (Python, JavaScript, TypeScript, Go, Rust, Java, C, C++, C#, PHP, HTML, CSS and more).
 - Generates comprehensive Markdown documentation files.
 - Utilizes local LLM via Ollama for code understanding.
 - Easy to use command-line interface.
@@ -62,9 +62,9 @@ python main.py <path_to_folder>
 
 ```
 
-DocGen will gett all supported files in the folder and its subfolders.
-
-Then it will pass their code through a local LLM and construct a Markdown file.
+DocGen will gett all supported files in the folder and its subfolders.      
+Then it will pass their code through a local LLM and construct a Markdown file.        
+You can extend the accepted languages in the `LANGUAGES` dict in `main.py`.          
 
 
 ## License

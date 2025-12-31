@@ -9,8 +9,92 @@ from pathlib import Path
 queue = set()
 
 LANGUAGES = {
-    ".py": "python",
-    ".rs": "rust",
+    # Python
+    ".py": "Python",
+    ".pyw": "Python",
+    ".pyi": "Python (type hints)",
+
+    # Rust
+    ".rs": "Rust",
+
+    # JavaScript
+    ".js": "JavaScript",
+    ".mjs": "JavaScript (ES modules)",
+    ".cjs": "JavaScript (CommonJS)",
+
+    # TypeScript
+    ".ts": "TypeScript",
+    ".tsx": "TypeScript (React)",
+    ".d.ts": "TypeScript (declarations)",
+
+    # Go
+    ".go": "Go",
+
+    # Java
+    ".java": "Java",
+    ".jar": "Java (archive)",
+    ".class": "Java (bytecode)",
+
+    # C
+    ".c": "C",
+    ".h": "C/C++ header",
+
+    # C++
+    ".cpp": "C++",
+    ".cc": "C++",
+    ".cxx": "C++",
+    ".hpp": "C++ header",
+    ".hh": "C++ header",
+    ".hxx": "C++ header",
+
+    # C#
+    ".cs": "C#",
+    ".csproj": "C# project",
+
+    # PHP
+    ".php": "PHP",
+    ".phtml": "PHP",
+
+    # Ruby
+    ".rb": "Ruby",
+    ".erb": "Ruby (ERB templates)",
+    ".rake": "Ruby (Rake)",
+
+    # Web
+    ".html": "HTML",
+    ".htm": "HTML",
+    ".css": "CSS",
+    ".scss": "CSS (Sass)",
+    ".sass": "CSS (Sass)",
+    ".less": "CSS (Less)",
+
+    # Shell
+    ".sh": "Shell",
+    ".bash": "Bash",
+    ".zsh": "Zsh",
+
+    # Other common languages
+    ".kt": "Kotlin",
+    ".kts": "Kotlin (script)",
+    ".swift": "Swift",
+    ".lua": "Lua",
+    ".pl": "Perl",
+    ".pm": "Perl module",
+    ".dart": "Dart",
+    ".r": "R",
+    ".m": "Objective-C / MATLAB",
+    ".mm": "Objective-C++",
+
+    # Data / config / markup
+    ".json": "JSON",
+    ".yaml": "YAML",
+    ".yml": "YAML",
+    ".xml": "XML",
+    ".toml": "TOML",
+    ".ini": "INI",
+    ".cfg": "Config",
+    ".md": "Markdown",
+    ".sql": "SQL"
 }
 
 def is_supported_language(file_path: str) -> bool:
