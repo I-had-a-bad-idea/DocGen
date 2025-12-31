@@ -13,6 +13,7 @@ It uses local Ollama to understand your code and create Markdown files for them.
     - [Python Dependencies](#python-dependencies)
     - [Olama + Model](#olama--model)
   - [Usage](#usage)
+  - [Ignoring Languages And Folders](#ignoring-languages-and-folders)
   - [License](#license)
 
 ---
@@ -24,6 +25,7 @@ It uses local Ollama to understand your code and create Markdown files for them.
 - Utilizes local LLM via Ollama for code understanding.
 - Easy to use command-line interface.
 - [Example Output](docs/llm_summary.md)
+- Supports ignoring specific languages or folders using a `.docgen_ignore` file
 
 ## Installation
 
@@ -66,6 +68,14 @@ DocGen will gett all supported files in the folder and its subfolders.
 Then it will pass their code through a local LLM and construct a Markdown file.        
 You can extend the accepted languages in the `LANGUAGES` dict in `main.py`.          
 
+
+## Ignoring Languages And Folders
+
+Create a `.docgen_ignore` file in the root of your project.
+To ignore specific languages, add their file extensions (e.g. `.py`, `.js`) to the file.
+To ignore specific folders, add their folder names (e.g. `node_modules/`, `venv/`) to the file.
+
+DocGen will skip files with the specified extensions and any files located in the specified folders during documentation generation.
 
 ## License
 
