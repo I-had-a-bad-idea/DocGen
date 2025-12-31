@@ -109,8 +109,9 @@ def is_supported_language(file_path: str) -> bool:
     return LANGUAGES.get(suffix) != None
 
 def is_allowed_folder(folder_path: str) -> bool:
+    folder = Path(folder_path)
     for ignored_folder in ignored_folders:
-        if folder_path.endswith(ignored_folder):
+        if ignored_folder in folder.parents or folder.name == ignored_folder.name:
             return False
     return True
 
@@ -168,13 +169,15 @@ async def generate_docs():
 def load_docgen_ignore(folder: str):
     folder_path = Path(folder)
     path = folder_path / ".docgen_ignore"
+    if not os.path.isfile(path):
+        return
     with open(path) as f:
         for line in f:
             line = line.strip()
             if line.endswith("/"):
-                ignored_folders.append(line)
+                ignored_folders.append(Path(line.strip()))
             elif line.startswith("."):
-                ignored_languages.append(line)
+                ignored_languages.append(line.strip())
 
 
 def main():
