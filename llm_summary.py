@@ -59,13 +59,13 @@ class Input(BaseModel):
     file_path: str
     code: str
 
-MAX_TOKENS = 32768 # 32.768
+MAX_CONTEXT = 32768 # 32.768 tokens
 
 ollama = AsyncClient()
 
 OPTIONS = {
     "temperature": 0.1,
-    "num_ctx": MAX_TOKENS, 
+    "num_ctx": MAX_CONTEXT, 
 
 }
 
@@ -87,11 +87,11 @@ async def summarize_code_in_chunk(input: Input) -> Documentation:
 
 async def summarize_code_in_markdown(input: Input) -> Documentation:
     code = input.code
-    if len(code) > MAX_TOKENS:
+    if len(code) > MAX_CONTEXT:
         codes = [
             Input(file_path=input.file_path,
-                  code=code[i:i+MAX_TOKENS])
-            for i in range(0, len(code), MAX_TOKENS)
+                  code=code[i:i+MAX_CONTEXT])
+            for i in range(0, len(code), MAX_CONTEXT)
         ]
     
         doc = Documentation(overview="",

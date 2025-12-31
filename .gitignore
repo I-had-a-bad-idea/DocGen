@@ -1,6 +1,5 @@
 # Test files
 test_files/
-docs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
