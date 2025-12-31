@@ -11,15 +11,6 @@ async def generate_markdown_from_symbols_async(file_path: str, code: str) -> str
     header_lines.append(f"> _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_\n\n")
 
     input = Input(code=code, file_path=file_path)
-    # for s in symbols:
-    #     symbol = SymbolInput(name=s.name,
-    #                          kind=s.kind,
-    #                          start_line=s.start_line,
-    #                          parent=s.parent if s.parent else "",
-    #                          code=s.code)
-    #     input.symbols.append(symbol)
-    
-    # input.symbols.sort(key=lambda s: s.start_line)
 
     header = "\n".join(header_lines)
 
@@ -45,6 +36,7 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     # Overview
     md_lines.append("# Overview")
     md_lines.append(doc.overview)
+    md_lines.append("\n---\n")  # separator before detailed sections
 
     # Symbols
     md_lines.append("# Symbols")
@@ -53,9 +45,12 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     # Helper to create a colored badge for kind
     def kind_badge(kind: str) -> str:
         colors = {
-            "class": "blue",
+            "variable": "blue",
             "function": "green",
-            "variable": "orange",
+            "class": "purple",
+            "enum": "orange",
+            "struct": "teal",
+            "module": "brown"
         }
         color = colors.get(kind.lower(), "gray")
         return f"<span style='background-color:{color}; color:white; padding:2px 6px; border-radius:4px;'>{kind}</span>"

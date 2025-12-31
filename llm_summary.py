@@ -29,6 +29,8 @@ Return ONLY valid JSON matching this schema:
   ]
 }
 
+kind can be: variable, function, class, enum, struct, module
+
 Return JSON only. No markdown. No explanations.
 """
 

@@ -4,6 +4,7 @@ from markdown_generator import generate_markdown
 from tqdm import tqdm
 from tqdm.asyncio import tqdm_asyncio
 import asyncio
+from pathlib import Path
 
 queue = set()
 
@@ -11,6 +12,11 @@ LANGUAGES = {
     ".py": "python",
     ".rs": "rust",
 }
+
+def is_supported_language(file_path: str) -> bool:
+    path = Path(file_path)
+    suffix = path.suffix
+    return LANGUAGES.get(suffix) != None
 
 def get_code_from_file(file_path: str) -> str:
     try:
@@ -42,7 +48,7 @@ async def get_files_for_folder(folder_path):
         element_path = os.path.join(folder_path, element)
 
         if os.path.isfile(element_path):
-            if LANGUAGES.get(element_path):
+            if is_supported_language(element_path):
                 queue.add(element_path)
         elif os.path.isdir(element_path):
             await get_files_for_folder(element_path)
@@ -52,7 +58,7 @@ async def get_files_for_path(path):
     if os.path.isdir(path):
         await get_files_for_folder(path)
     elif os.path.isfile(path):
-        if LANGUAGES.get(path):
+        if is_supported_language(path):
             queue.add(path)
 
 async def generate_docs():
