@@ -35,6 +35,7 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     
     # Overview
     md_lines.append("# Overview")
+    md_lines.append(f"**Language**: {doc.language}\n")
     md_lines.append(doc.overview)
     md_lines.append("\n---\n")  # separator before detailed sections
 
@@ -61,9 +62,14 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
         md_lines.append(f"<a id='{anchor}'></a>")
         md_lines.append(f"<details style='margin-bottom: 10px;'>")
         md_lines.append(f"  <summary> **{s.name}** {kind_badge(s.kind)}</summary>\n")
-        md_lines.append(f"  - **Defined on line:** `<code>{s.start_line}</code>`")
+
+        if s.start_line == s.end_line:
+            md_lines.append(f"  - **Defined on line:** {s.start_line}")
+        else:
+            md_lines.append(f"  - **Defined on lines:** {s.start_line}-{s.end_line}")
+
         if s.parent:
-            md_lines.append(f"  - **Parent:** `<code>{s.parent}</code>`")
+            md_lines.append(f"  - **Parent:** {s.parent}")
         md_lines.append("")  # blank line before summaries
 
         md_lines.append(f"  <h4>High-Level Summary</h4>")
@@ -71,6 +77,19 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
 
         md_lines.append(f"  <h4>Low-Level Summary</h4>")
         md_lines.append(f"  <p>{s.low_level_summary}</p>")
+
+        if s.notes:
+            md_lines.append(f"  <h4>Notes</h4>")
+            md_lines.append(f"  <p>{s.notes}</p>")
+
+        if s.examples:
+            md_lines.append(f"  <h4>Examples</h4>")
+            md_lines.append(f"```{doc.language}")
+            md_lines.append("")
+            md_lines.append("\n".join(s.examples))
+            md_lines.append("")
+            md_lines.append("```")
+            md_lines.append("")
 
         md_lines.append(f"</details>")
         md_lines.append("<hr>")  # horizontal rule between symbols
