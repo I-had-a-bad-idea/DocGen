@@ -83,9 +83,9 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
         md_lines.append(f"  <h4>Usage</h4>")
         md_lines.append(f"  <p>{s.usage}</p>")
 
-        if s.problems:
-            md_lines.append(f"  <h4>Problems</h4>")
-            md_lines.append(f"  <p>{s.problems}</p>")
+        if s.limitations:
+            md_lines.append(f"  <h4>Limitations</h4>")
+            md_lines.append(f"  <p>{",\n".join(s.limitations)}</p>")
 
         # if s.examples:
         #     md_lines.append(f"<h4>Examples</h4>")

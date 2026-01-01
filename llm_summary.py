@@ -10,7 +10,8 @@ You are given structured JSON describing code symbols.
 
 For EACH symbol:
 - Analyze the code
-- Produce a high-level and a detailed low-level summary
+- Fill out the JSON below.
+- Be extremly DETAILED.
 - Do NOT keep the code
 - Do NOT invent new symbols
 - Key components should one be a few, not all
@@ -32,12 +33,11 @@ Return ONLY valid JSON matching this schema:
       "purpose": "",
       "details": "",
       "usage":  "how_to_use_it",
-      "problems": "potential_problems",
+      "limitations": ["limitations"],
     }
   ]
 }
 
-Examples should be an array of strings or empty.
 
 Return JSON only. No markdown. No explanations.
 """
@@ -51,7 +51,7 @@ class SymbolOutput(BaseModel):
     purpose: str
     details: str
     usage: str
-    problems: str | None
+    limitations: list[str]
 
 class Documentation(BaseModel):
     overview: str
@@ -99,7 +99,7 @@ async def summarize_code_in_markdown(input: Input) -> Documentation:
         ]
     
         doc = Documentation(overview="",
-                            symbols=[], language="", key_components="")
+                            symbols=[], language="", key_components=[""])
         for chunk_input in tqdm_asyncio(codes, desc="Summarizing code chunks", unit="chunk"):
             chunk_doc = await summarize_code_in_chunk(chunk_input)
             doc.overview += chunk_doc.overview + "\n"
