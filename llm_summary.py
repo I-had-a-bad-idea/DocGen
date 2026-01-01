@@ -13,12 +13,15 @@ For EACH symbol:
 - Produce a high-level and a detailed low-level summary
 - Do NOT keep the code
 - Do NOT invent new symbols
+- Key components should one be a few, not all
+
 
 Return ONLY valid JSON matching this schema:
 
 {
   "overview": "an_overview_of_the_file",
   "language:" "the_language_of_the_file",
+  "key_components": ["the_key_components_of_the_file"],
   "symbols": [
     {
       "name": "the_symbol_name",
@@ -26,10 +29,10 @@ Return ONLY valid JSON matching this schema:
       "start_line": 0,
       "end_line": 0,
       "parent": "",
-      "high_level_summary": "",
-      "low_level_summary": ""
-      "examples": [""]
-      "notes":  "some_notes"
+      "purpose": "",
+      "details": "",
+      "usage":  "how_to_use_it",
+      "problems": "potential_problems",
     }
   ]
 }
@@ -45,14 +48,15 @@ class SymbolOutput(BaseModel):
     start_line: int
     end_line: int
     parent: str
-    high_level_summary: str
-    low_level_summary: str
-    examples: list[str] | None
-    notes: str | None
+    purpose: str
+    details: str
+    usage: str
+    problems: str | None
 
 class Documentation(BaseModel):
     overview: str
     language: str
+    key_components: list[str]
     symbols: list[SymbolOutput]
 
 class Input(BaseModel):
@@ -76,10 +80,10 @@ async def summarize_code_in_chunk(input: Input) -> Documentation:
                                  options=OPTIONS,
                                  format="json")
     
-    # parsed = json.loads(resp.response)
-    # with open("model_answers.log", "a") as f:
-    #     json.dump(parsed, f, indent=2)
-    #     f.write("\n")
+    parsed = json.loads(resp.response)
+    with open("model_answers.log", "a") as f:
+        json.dump(parsed, f, indent=2)
+        f.write("\n")
 
     response = Documentation.model_validate_json(resp.response)
 
@@ -95,7 +99,7 @@ async def summarize_code_in_markdown(input: Input) -> Documentation:
         ]
     
         doc = Documentation(overview="",
-                            symbols=[], language="")
+                            symbols=[], language="", key_components="")
         for chunk_input in tqdm_asyncio(codes, desc="Summarizing code chunks", unit="chunk"):
             chunk_doc = await summarize_code_in_chunk(chunk_input)
             doc.overview += chunk_doc.overview + "\n"

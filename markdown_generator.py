@@ -37,6 +37,8 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     md_lines.append("# Overview")
     md_lines.append(f"**Language**: {doc.language}\n")
     md_lines.append(doc.overview)
+    md_lines.append("## Key components")
+    md_lines.append(",\n".join(doc.key_components))
     md_lines.append("\n---\n")  # separator before detailed sections
 
     # Symbols
@@ -72,23 +74,26 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
             md_lines.append(f"  - **Parent:** {s.parent}")
         md_lines.append("")  # blank line before summaries
 
-        md_lines.append(f"  <h4>High-Level Summary</h4>")
-        md_lines.append(f"  <p>{s.high_level_summary}</p>")
+        md_lines.append(f"  <h4>Purpose</h4>")
+        md_lines.append(f"  <p>{s.purpose}</p>")
 
-        md_lines.append(f"  <h4>Low-Level Summary</h4>")
-        md_lines.append(f"  <p>{s.low_level_summary}</p>")
+        md_lines.append(f"  <h4>Details</h4>")
+        md_lines.append(f"  <p>{s.details}</p>")
 
-        if s.notes:
-            md_lines.append(f"  <h4>Notes</h4>")
-            md_lines.append(f"  <p>{s.notes}</p>")
+        md_lines.append(f"  <h4>Usage</h4>")
+        md_lines.append(f"  <p>{s.usage}</p>")
 
-        if s.examples:
-            md_lines.append(f"<h4>Examples</h4>")
-            md_lines.append("")
-            md_lines.append(f"```{doc.language}")
-            md_lines.append("\n".join(s.examples).strip())
-            md_lines.append("```")
-            md_lines.append("")
+        if s.problems:
+            md_lines.append(f"  <h4>Problems</h4>")
+            md_lines.append(f"  <p>{s.problems}</p>")
+
+        # if s.examples:
+        #     md_lines.append(f"<h4>Examples</h4>")
+        #     md_lines.append("")
+        #     md_lines.append(f"```{doc.language}")
+        #     md_lines.append("\n".join(s.examples).strip())
+        #     md_lines.append("```")
+        #     md_lines.append("")
 
         md_lines.append(f"</details>")
         md_lines.append("<hr>")  # horizontal rule between symbols
