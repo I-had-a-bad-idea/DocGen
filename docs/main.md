@@ -1,124 +1,221 @@
 # **Documentation for `main.py`**
-> _Generated on 2025-12-31 16:22:12_
+> _Generated on 2026-01-02 16:43:13_
 
 > _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_
 
 
 
 # Overview
-**Language**: python
+A script to generate documentation for various programming languages.                                   
+**Language**: Python
 
-This Python script is designed to generate documentation for Python files within a specified folder. It uses the `markdown_generator` library to convert code into Markdown format and utilizes `tqdm` for progress tracking.
+## Key components
+queue,
+LANGUAGES,
+ignored_languages,
+ignored_folders,
+is_supported_language,
+is_allowed_folder,
+get_code_from_file,
+generate_docs_for_file,
+get_files_for_folder,
+get_files_for_path,
+generate_docs,
+load_docgen_ignore,
+main
+## Requirements
+Python 3.6 or later,
+markdown_generator library,
+tqdm library,
+asyncio library,
+pathlib library
+## Usage
+Run the script with a folder path as an argument to generate documentation for all supported files in that folder and its subfolders.
 
 ---
+
 
 # Symbols
 
 <a id='queue'></a>
 <details style='margin-bottom: 10px;'>
-  <summary> **queue** <span style='background-color:blue; color:white; padding:2px 6px; border-radius:4px;'>variable</span></summary>
+  <summary> **queue** <span style='background-color:gray; color:white; padding:2px 6px; border-radius:4px;'>set</span></summary>
 
-  - **Defined on line:** 1
+  - **Defined on lines:** 1-2
 
-  <h4>High-Level Summary</h4>
-  <p>A set used to store paths of Python files that need documentation generation.</p>
-  <h4>Low-Level Summary</h4>
-  <p>This variable is initialized as an empty set and is used to keep track of all the file paths that are identified as supported languages and need their documentation generated.</p>
+  <h4>Purpose</h4>
+  <p>A set to store file paths for processing.</p>
+  <h4>Details</h4>
+  <p></p>
+  <h4>Usage</h4>
+  <p>Add file paths to the queue using `queue.add(element_path)`.</p>
 </details>
 <hr>
 <a id='languages'></a>
 <details style='margin-bottom: 10px;'>
-  <summary> **LANGUAGES** <span style='background-color:blue; color:white; padding:2px 6px; border-radius:4px;'>variable</span></summary>
+  <summary> **LANGUAGES** <span style='background-color:gray; color:white; padding:2px 6px; border-radius:4px;'>dict</span></summary>
 
-  - **Defined on lines:** 3-10
+  - **Defined on lines:** 4-56
 
-  <h4>High-Level Summary</h4>
+  <h4>Purpose</h4>
   <p>A dictionary mapping file extensions to their corresponding programming languages.</p>
-  <h4>Low-Level Summary</h4>
-  <p>This variable is a dictionary that maps the file extension ".py" to the language "python" and ".rs" to the language "rust". It is used to determine if a given file path corresponds to a supported language.</p>
+  <h4>Details</h4>
+  <p></p>
+  <h4>Usage</h4>
+  <p>Check if a file is supported by looking up its extension in the `LANGUAGES` dictionary.</p>
+</details>
+<hr>
+<a id='ignored_languages'></a>
+<details style='margin-bottom: 10px;'>
+  <summary> **ignored_languages** <span style='background-color:gray; color:white; padding:2px 6px; border-radius:4px;'>list</span></summary>
+
+  - **Defined on lines:** 58-60
+
+  <h4>Purpose</h4>
+  <p>A list of file extensions to ignore.</p>
+  <h4>Details</h4>
+  <p></p>
+  <h4>Usage</h4>
+  <p>Add file extensions to the `ignored_languages` list to exclude them from processing.</p>
+</details>
+<hr>
+<a id='ignored_folders'></a>
+<details style='margin-bottom: 10px;'>
+  <summary> **ignored_folders** <span style='background-color:gray; color:white; padding:2px 6px; border-radius:4px;'>list</span></summary>
+
+  - **Defined on lines:** 62-64
+
+  <h4>Purpose</h4>
+  <p>A list of folder names to ignore.</p>
+  <h4>Details</h4>
+  <p></p>
+  <h4>Usage</h4>
+  <p>Add folder names to the `ignored_folders` list to exclude them from processing.</p>
 </details>
 <hr>
 <a id='is_supported_language'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **is_supported_language** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 12-20
+  - **Defined on lines:** 66-78
 
-  <h4>High-Level Summary</h4>
-  <p>A function to check if a given file path corresponds to a supported language.</p>
-  <h4>Low-Level Summary</h4>
-  <p>This function takes a file path as input and returns `True` if the file extension is in the `LANGUAGES` dictionary, indicating that it is a supported language. It uses the `Path` class from the `pathlib` module to extract the file extension.</p>
+  <h4>Purpose</h4>
+  <p>Check if a file is supported by its extension.</p>
+  <h4>Details</h4>
+  <p>Returns `True` if the file extension is in the `LANGUAGES` dictionary, otherwise returns `False`.</p>
+  <h4>Usage</h4>
+  <p>Use this function to determine if a file should be processed.</p>
+</details>
+<hr>
+<a id='is_allowed_folder'></a>
+<details style='margin-bottom: 10px;'>
+  <summary> **is_allowed_folder** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+
+  - **Defined on lines:** 80-92
+
+  <h4>Purpose</h4>
+  <p>Check if a folder is allowed for processing.</p>
+  <h4>Details</h4>
+  <p>Returns `True` if the folder is not in the `ignored_folders` list and is not ignored by its name or parent folders, otherwise returns `False`.</p>
+  <h4>Usage</h4>
+  <p>Use this function to determine if a folder should be processed.</p>
 </details>
 <hr>
 <a id='get_code_from_file'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **get_code_from_file** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 22-34
+  - **Defined on lines:** 94-108
 
-  <h4>High-Level Summary</h4>
-  <p>A function to read the content of a Python file.</p>
-  <h4>Low-Level Summary</h4>
-  <p>This function takes a file path as input and attempts to open and read the contents of the file. It uses UTF-8 encoding to ensure that non-ASCII characters are handled correctly. If an error occurs during reading, it prints an error message and returns an empty string.</p>
+  <h4>Purpose</h4>
+  <p>Read the content of a file and return it as a string.</p>
+  <h4>Details</h4>
+  <p>Returns the contents of the file if successful, otherwise returns an empty string and prints an error message.</p>
+  <h4>Usage</h4>
+  <p>Use this function to read the code from a file.</p>
 </details>
 <hr>
 <a id='generate_docs_for_file'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **generate_docs_for_file** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 36-50
+  - **Defined on lines:** 110-124
 
-  <h4>High-Level Summary</h4>
-  <p>A function to generate documentation for a single Python file.</p>
-  <h4>Low-Level Summary</h4>
-  <p>This function takes a file path as input and checks if it is a valid file. If so, it reads the code from the file using `get_code_from_file` and then calls `generate_markdown` to convert the code into Markdown format. The `tqdm` library is used for progress tracking.</p>
+  <h4>Purpose</h4>
+  <p>Generate documentation for a single file.</p>
+  <h4>Details</h4>
+  <p>Reads the code from the file and calls `generate_markdown` to generate documentation if the file is supported.</p>
+  <h4>Usage</h4>
+  <p>Use this function to generate documentation for a specific file.</p>
 </details>
 <hr>
 <a id='get_files_for_folder'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **get_files_for_folder** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 52-76
+  - **Defined on lines:** 126-158
 
-  <h4>High-Level Summary</h4>
-  <p>A function to recursively retrieve all Python files within a folder.</p>
-  <h4>Low-Level Summary</h4>
-  <p>This function takes a folder path as input and checks if it is a valid directory. If so, it lists all the elements in the directory using `os.listdir`. For each element, it constructs the full file path and checks if it is a supported language using `is_supported_language`. If it is, the file path is added to the `queue` set. If the element is a subdirectory, the function calls itself recursively to process that subdirectory.</p>
+  <h4>Purpose</h4>
+  <p>Recursively get all files in a folder and its subfolders.</p>
+  <h4>Details</h4>
+  <p>Iterates over the elements of the folder, checks if each element is a file or directory, and processes it accordingly. Uses `tqdm` to display progress.</p>
+  <h4>Usage</h4>
+  <p>Use this function to recursively process all files in a folder.</p>
 </details>
 <hr>
 <a id='get_files_for_path'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **get_files_for_path** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 78-94
+  - **Defined on lines:** 160-174
 
-  <h4>High-Level Summary</h4>
-  <p>A function to retrieve all Python files based on the input path.</p>
-  <h4>Low-Level Summary</h4>
-  <p>This function takes a path as input and checks if it is a directory or a file. If it is a directory, it calls `get_files_for_folder` to process all files within that directory. If it is a file, it checks if it is a supported language using `is_supported_language`. If it is, the file path is added to the `queue` set.</p>
+  <h4>Purpose</h4>
+  <p>Get all files for a given path, whether it's a folder or a file.</p>
+  <h4>Details</h4>
+  <p>If the path is a directory, calls `get_files_for_folder` to process all files in the directory. If the path is a file, checks if it's supported and adds it to the queue.</p>
+  <h4>Usage</h4>
+  <p>Use this function to get all files for a given path.</p>
 </details>
 <hr>
 <a id='generate_docs'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **generate_docs** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 96-108
+  - **Defined on lines:** 176-184
 
-  <h4>High-Level Summary</h4>
-  <p>A function to generate documentation for all files in the `queue` set.</p>
-  <h4>Low-Level Summary</h4>
-  <p>This function creates a list of tasks using a list comprehension, where each task is an asynchronous call to `generate_docs_for_file` for each file path in the `queue`. It then uses `tqdm_asyncio.as_completed` to process these tasks concurrently and print progress. The `asyncio.run` function is used to execute the main coroutine.</p>
+  <h4>Purpose</h4>
+  <p>Generate documentation for all files in the queue.</p>
+  <h4>Details</h4>
+  <p>Creates a list of tasks to generate documentation for each file in the queue and runs them concurrently using `asyncio`.</p>
+  <h4>Usage</h4>
+  <p>Use this function to generate documentation for all files in the queue.</p>
+</details>
+<hr>
+<a id='load_docgen_ignore'></a>
+<details style='margin-bottom: 10px;'>
+  <summary> **load_docgen_ignore** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+
+  - **Defined on lines:** 186-204
+
+  <h4>Purpose</h4>
+  <p>Load the .docgen_ignore file and add ignored languages and folders to their respective lists.</p>
+  <h4>Details</h4>
+  <p>Reads the .docgen_ignore file if it exists, adds each line to the `ignored_languages` or `ignored_folders` list based on whether it ends with a slash or not.</p>
+  <h4>Usage</h4>
+  <p>Use this function to load the .docgen_ignore file and configure ignored languages and folders.</p>
 </details>
 <hr>
 <a id='main'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **main** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 110-134
+  - **Defined on lines:** 206-234
 
-  <h4>High-Level Summary</h4>
-  <p>The entry point of the script, which handles command-line arguments and orchestrates the documentation generation process.</p>
-  <h4>Low-Level Summary</h4>
-  <p>This function checks if there are any command-line arguments. If so, it retrieves all files in the specified path using `get_files_for_path` and generates documentation for them using `generate_docs`. If no arguments are provided, it prints a usage message.</p>
+  <h4>Purpose</h4>
+  <p>The main function to run the script.</p>
+  <h4>Details</h4>
+  <p>Checks if a path is provided as an argument, loads the .docgen_ignore file, processes all files in the folder and its subfolders, generates documentation for each file, and prints a success message.</p>
+  <h4>Usage</h4>
+  <p>Run this function to execute the script.</p>
 </details>
 <hr>
