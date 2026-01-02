@@ -35,7 +35,7 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     
     # Overview
     md_lines.append("# Overview")
-    md_lines.append(doc.overview + "\t")
+    md_lines.append(doc.overview + "                                   ")
     md_lines.append(f"**Language**: {doc.language}\n")
     md_lines.append("## Key components")
     md_lines.append(",\n".join(doc.key_components))
