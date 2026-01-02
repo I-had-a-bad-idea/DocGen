@@ -11,22 +11,23 @@ You are given structured JSON describing code symbols.
 For EACH symbol:
 - Analyze the code
 - Fill out the JSON below.
-- Be extremly DETAILED.
 - Do NOT keep the code
 - Do NOT invent new symbols
 - Key components should one be a few, not all
-
+- Internal should be false if the symbol is meant to be used from another file.
 
 Return ONLY valid JSON matching this schema:
 
 {
-  "overview": "an_overview_of_the_file",
+  "overview": "the_purpose_of_the_file",
   "language:" "the_language_of_the_file",
   "key_components": ["the_key_components_of_the_file"],
+  "requirements": ["the_requirements_of_the_file"],
   "symbols": [
     {
       "name": "the_symbol_name",
-      "kind": "the_symbol_lo",
+      "kind": "the_symbol_type",
+      "internal": true,
       "start_line": 0,
       "end_line": 0,
       "parent": "",
@@ -45,6 +46,7 @@ Return JSON only. No markdown. No explanations.
 class SymbolOutput(BaseModel):
     name: str
     kind: str
+    internal: bool
     start_line: int
     end_line: int
     parent: str
@@ -57,6 +59,7 @@ class Documentation(BaseModel):
     overview: str
     language: str
     key_components: list[str]
+    requirements: list[str]
     symbols: list[SymbolOutput]
 
 class Input(BaseModel):
@@ -99,7 +102,7 @@ async def summarize_code_in_markdown(input: Input) -> Documentation:
         ]
     
         doc = Documentation(overview="",
-                            symbols=[], language="", key_components=[""])
+                            symbols=[], language="", key_components=[""], requirements=[""])
         for chunk_input in tqdm_asyncio(codes, desc="Summarizing code chunks", unit="chunk"):
             chunk_doc = await summarize_code_in_chunk(chunk_input)
             doc.overview += chunk_doc.overview + "\n"
