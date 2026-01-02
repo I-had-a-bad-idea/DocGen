@@ -1,21 +1,36 @@
 # **Documentation for `llm_summary.py`**
-> _Generated on 2026-01-01 15:38:30_
+> _Generated on 2026-01-02 16:43:13_
 
 > _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_
 
 
 
 # Overview
+This file provides a function to summarize code using the Ollama AI model.                                   
 **Language**: python
 
-This Python script is designed to summarize code symbols using the Ollama AI model. It processes input code, breaks it into chunks if necessary, and generates summaries for each chunk.
 ## Key components
-Ollama,
-Pydantic,
-TQDM,
-JSON
+AsyncClient,
+BaseModel,
+tqdm_asyncio,
+json,
+SymbolOutput,
+Documentation,
+Input,
+MAX_CONTEXT,
+ollama,
+OPTIONS,
+summarize_code_in_chunk,
+summarize_code
+## Requirements
+Ollama AI model,
+Pydantic library,
+TQDM library
+## Usage
+To use this file, you need to have the Ollama AI model installed and running. You can then call the `summarize_code` function with an `Input` object containing the code you want to summarize.
 
 ---
+
 
 # Symbols
 
@@ -28,166 +43,162 @@ JSON
   <h4>Purpose</h4>
   <p>An asynchronous client for interacting with the Ollama AI model.</p>
   <h4>Details</h4>
-  <p>This class is used to establish a connection to the Ollama server and send requests for generating summaries.</p>
+  <p></p>
   <h4>Usage</h4>
-  <p>ollama = AsyncClient()</p>
-  <h4>Limitations</h4>
-  <p>Requires an active internet connection to connect to the Ollama server.</p>
+  <p>To use this class, you need to import it from the `ollama` module and create an instance of it.</p>
 </details>
 <hr>
 <a id='basemodel'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **BaseModel** <span style='background-color:purple; color:white; padding:2px 6px; border-radius:4px;'>class</span></summary>
 
-  - **Defined on lines:** 3-10
+  - **Defined on line:** 2
 
   <h4>Purpose</h4>
-  <p>A base class for Pydantic models.</p>
+  <p>A base class for Pydantic models, which provides a way to define data structures with type annotations.</p>
   <h4>Details</h4>
-  <p>This class provides a framework for defining data models with validation and serialization capabilities.</p>
+  <p></p>
   <h4>Usage</h4>
-  <p>class SymbolOutput(BaseModel):
-    name: str
-    kind: str
-    start_line: int
-    end_line: int
-    parent: str
-    purpose: str
-    details: str
-    usage: str
-    limitations: list[str]
-</p>
-  <h4>Limitations</h4>
-  <p>Requires Pydantic to be installed.</p>
+  <p>To use this class, you need to import it from the `pydantic` module and create an instance of it.</p>
+</details>
+<hr>
+<a id='tqdm_asyncio'></a>
+<details style='margin-bottom: 10px;'>
+  <summary> **tqdm_asyncio** <span style='background-color:brown; color:white; padding:2px 6px; border-radius:4px;'>module</span></summary>
+
+  - **Defined on line:** 3
+
+  <h4>Purpose</h4>
+  <p>A wrapper around the `tqdm` library that provides asynchronous progress bars.</p>
+  <h4>Details</h4>
+  <p></p>
+  <h4>Usage</h4>
+  <p>To use this module, you need to import it from the `tqdm.asyncio` module and create an instance of it.</p>
+</details>
+<hr>
+<a id='json'></a>
+<details style='margin-bottom: 10px;'>
+  <summary> **json** <span style='background-color:brown; color:white; padding:2px 6px; border-radius:4px;'>module</span></summary>
+
+  - **Defined on line:** 4
+
+  <h4>Purpose</h4>
+  <p>A module for encoding and decoding JSON data.</p>
+  <h4>Details</h4>
+  <p></p>
+  <h4>Usage</h4>
+  <p>To use this module, you need to import it from the `json` module and create an instance of it.</p>
+</details>
+<hr>
+<a id='symboloutput'></a>
+<details style='margin-bottom: 10px;'>
+  <summary> **SymbolOutput** <span style='background-color:purple; color:white; padding:2px 6px; border-radius:4px;'>class</span></summary>
+
+  - **Defined on lines:** 10-24
+
+  <h4>Purpose</h4>
+  <p>A Pydantic model that represents the output of a symbol.</p>
+  <h4>Details</h4>
+  <p></p>
+  <h4>Usage</h4>
+  <p>To use this class, you need to import it from the `llm_summary` module and create an instance of it.</p>
 </details>
 <hr>
 <a id='documentation'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **Documentation** <span style='background-color:purple; color:white; padding:2px 6px; border-radius:4px;'>class</span></summary>
 
-  - **Defined on lines:** 12-20
+  - **Defined on lines:** 26-40
 
   <h4>Purpose</h4>
-  <p>A class for representing the documentation of code symbols.</p>
+  <p>A Pydantic model that represents the documentation for a file.</p>
   <h4>Details</h4>
-  <p>This class contains information about the overview, language, key components, and symbols of a code summary.</p>
+  <p></p>
   <h4>Usage</h4>
-  <p>response = Documentation.model_validate_json(resp.response)</p>
-  <h4>Limitations</h4>
-  <p>Requires Pydantic to be installed.</p>
+  <p>To use this class, you need to import it from the `llm_summary` module and create an instance of it.</p>
 </details>
 <hr>
 <a id='input'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **Input** <span style='background-color:purple; color:white; padding:2px 6px; border-radius:4px;'>class</span></summary>
 
-  - **Defined on lines:** 22-30
+  - **Defined on lines:** 42-50
 
   <h4>Purpose</h4>
-  <p>A class for representing the input data for summarizing code.</p>
+  <p>A Pydantic model that represents the input for summarizing code.</p>
   <h4>Details</h4>
-  <p>This class contains the file path and code to be summarized.</p>
+  <p></p>
   <h4>Usage</h4>
-  <p>input = Input(file_path=input.file_path, code=code)</p>
-  <h4>Limitations</h4>
-  <p>Requires Pydantic to be installed.</p>
+  <p>To use this class, you need to import it from the `llm_summary` module and create an instance of it.</p>
 </details>
 <hr>
 <a id='max_context'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **MAX_CONTEXT** <span style='background-color:blue; color:white; padding:2px 6px; border-radius:4px;'>variable</span></summary>
 
-  - **Defined on line:** 32
+  - **Defined on line:** 52
 
   <h4>Purpose</h4>
-  <p>The maximum context length for the Ollama model.</p>
+  <p>The maximum context size for summarizing code.</p>
   <h4>Details</h4>
-  <p>This variable defines the maximum number of tokens that can be processed in a single request to the Ollama server.</p>
+  <p></p>
   <h4>Usage</h4>
-  <p>MAX_CONTEXT = 32768</p>
-  <h4>Limitations</h4>
-  <p>May need to adjust based on the specific requirements of the Ollama model.</p>
+  <p>To use this variable, you need to import it from the `llm_summary` module and access it directly.</p>
 </details>
 <hr>
 <a id='ollama'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **ollama** <span style='background-color:blue; color:white; padding:2px 6px; border-radius:4px;'>variable</span></summary>
 
-  - **Defined on line:** 34
+  - **Defined on line:** 54
 
   <h4>Purpose</h4>
-  <p>An instance of the AsyncClient class.</p>
+  <p>An instance of the `AsyncClient` class for interacting with the Ollama AI model.</p>
   <h4>Details</h4>
-  <p>This variable holds the connection to the Ollama server and is used for generating summaries.</p>
+  <p></p>
   <h4>Usage</h4>
-  <p>ollama = AsyncClient()</p>
-  <h4>Limitations</h4>
-  <p>Requires an active internet connection to connect to the Ollama server.</p>
+  <p>To use this variable, you need to import it from the `ollama` module and access it directly.</p>
 </details>
 <hr>
 <a id='options'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **OPTIONS** <span style='background-color:blue; color:white; padding:2px 6px; border-radius:4px;'>variable</span></summary>
 
-  - **Defined on lines:** 36-40
+  - **Defined on lines:** 56-58
 
   <h4>Purpose</h4>
-  <p>The options for generating summaries.</p>
+  <p>The options for interacting with the Ollama AI model.</p>
   <h4>Details</h4>
-  <p>This variable contains the temperature and context length settings for the Ollama model.</p>
+  <p></p>
   <h4>Usage</h4>
-  <p>OPTIONS = {
-    "temperature": 0.1,
-    "num_ctx": MAX_CONTEXT, 
-
-}</p>
-  <h4>Limitations</h4>
-  <p>May need to adjust based on the specific requirements of the Ollama model.</p>
+  <p>To use this variable, you need to import it from the `llm_summary` module and access it directly.</p>
 </details>
 <hr>
 <a id='summarize_code_in_chunk'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **summarize_code_in_chunk** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 42-58
+  - **Defined on lines:** 60-124
 
   <h4>Purpose</h4>
-  <p>A function to summarize a single code chunk.</p>
+  <p>A function that summarizes a chunk of code using the Ollama AI model.</p>
   <h4>Details</h4>
-  <p>This function generates a summary for a given input and writes the response to a log file.</p>
+  <p></p>
   <h4>Usage</h4>
-  <p>async def summarize_code_in_chunk(input: Input) -> Documentation:
-    prompt = BASE_PROMPT + "\n\nINPUT:\n\n" + input.model_dump_json(indent=2)
-    resp = await ollama.generate(MODEL,
-                                 prompt=prompt,
-                                 options=OPTIONS,
-                                 format="json")
-</p>
-  <h4>Limitations</h4>
-  <p>Requires the Ollama AI model to be installed and running.</p>
+  <p>To use this function, you need to import it from the `llm_summary` module and call it with an `Input` object containing the code you want to summarize.</p>
 </details>
 <hr>
-<a id='summarize_code_in_markdown'></a>
+<a id='summarize_code'></a>
 <details style='margin-bottom: 10px;'>
-  <summary> **summarize_code_in_markdown** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+  <summary> **summarize_code** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 60-125
+  - **Defined on lines:** 126-174
 
   <h4>Purpose</h4>
-  <p>A function to summarize the entire code.</p>
+  <p>A function that summarizes a file of code using the Ollama AI model.</p>
   <h4>Details</h4>
-  <p>This function processes the input code, breaks it into chunks if necessary, and generates summaries for each chunk.</p>
+  <p></p>
   <h4>Usage</h4>
-  <p>async def summarize_code_in_markdown(input: Input) -> Documentation:
-    code = input.code
-    if len(code) > MAX_CONTEXT:
-        codes = [
-            Input(file_path=input.file_path,
-                  code=code[i:i+MAX_CONTEXT])
-            for i in range(0, len(code), MAX_CONTEXT)
-        ]
-</p>
-  <h4>Limitations</h4>
-  <p>Requires the Ollama AI model to be installed and running.</p>
+  <p>To use this function, you need to import it from the `llm_summary` module and call it with an `Input` object containing the code you want to summarize.</p>
 </details>
 <hr>

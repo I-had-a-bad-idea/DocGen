@@ -1,21 +1,28 @@
 # **Documentation for `markdown_generator.py`**
-> _Generated on 2026-01-01 15:38:30_
+> _Generated on 2026-01-02 16:43:13_
 
 > _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_
 
 
 
 # Overview
+Generates markdown documentation for Python files based on their symbols.                                   
 **Language**: python
 
-This script generates Markdown documentation for Python files based on their symbols and code structure.
 ## Key components
 generate_markdown_from_symbols_async,
 generate_markdown_from_doc,
-Input,
-Documentation
+generate_md_for_symbol,
+kind_badge
+## Requirements
+pathlib,
+datetime,
+llm_summary
+## Usage
+To use this file, call `generate_markdown(file_path: str, code: str)` with the path to a Python file and its source code. The function will return the generated markdown content.
 
 ---
+
 
 # Symbols
 
@@ -23,86 +30,55 @@ Documentation
 <details style='margin-bottom: 10px;'>
   <summary> **generate_markdown_from_symbols_async** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 1-24
+  - **Defined on lines:** 1-23
 
   <h4>Purpose</h4>
-  <p>Asynchronously generates Markdown documentation for a given Python file.</p>
+  <p>Asynchronously generates markdown documentation for a Python file based on its symbols.</p>
   <h4>Details</h4>
-  <p>This function takes the file path and code as input, processes the code to extract symbols, and then generates Markdown content based on these symbols. It uses other functions like `summarize_code_in_markdown` and `generate_markdown_from_doc` to handle the documentation generation process.</p>
+  <p>This function takes the path to a Python file and its source code as input, processes it using `summarize_code` from the `llm_summary` module, and then generates markdown content using `generate_markdown_from_doc`. The resulting markdown is saved to a file in the specified output directory.</p>
   <h4>Usage</h4>
-  <p>To use this function, call it with the file path and code as arguments. For example:
-
-```python
-md = await generate_markdown_from_symbols_async('path/to/file.py', 'your_code_here')
-```
-</p>
-  <h4>Limitations</h4>
-  <p>Asynchronous nature may affect performance for very large files.</p>
-</details>
-<hr>
-<a id='input'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **Input** <span style='background-color:purple; color:white; padding:2px 6px; border-radius:4px;'>class</span></summary>
-
-  - **Defined on lines:** 3-10
-
-  <h4>Purpose</h4>
-  <p>Represents input data for code summarization.</p>
-  <h4>Details</h4>
-  <p>This class is used to encapsulate the code and file path, which are necessary inputs for generating documentation. It provides a simple interface to access these attributes.</p>
-  <h4>Usage</h4>
-  <p>To use this class, create an instance of `Input` with the required parameters. For example:
-
-```python
-code = 'your_code_here'
-file_path = 'path/to/file.py'
-inp = Input(code=code, file_path=file_path)
-```
-</p>
-  <h4>Limitations</h4>
-  <p>The class assumes that the input data is valid and may not handle all edge cases.</p>
-</details>
-<hr>
-<a id='documentation'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **Documentation** <span style='background-color:purple; color:white; padding:2px 6px; border-radius:4px;'>class</span></summary>
-
-  - **Defined on lines:** 12-104
-
-  <h4>Purpose</h4>
-  <p>Represents documentation for a Python file.</p>
-  <h4>Details</h4>
-  <p>This class is used to encapsulate the language, overview, key components, and symbols of a Python file. It provides methods to sort symbols by line number and generate Markdown content based on these attributes.</p>
-  <h4>Usage</h4>
-  <p>To use this class, create an instance of `Documentation` with the required parameters. For example:
-
-```python
-doc = Documentation(language='Python', overview='This is an overview of the file.', key_components=['symbol1', 'symbol2'], symbols=[...])
-```
-</p>
-  <h4>Limitations</h4>
-  <p>The class assumes that the input data is valid and may not handle all edge cases.</p>
+  <p>To use this function, call `await generate_markdown_from_symbols_async(file_path: str, code: str)` with the path to a Python file and its source code. The function will return the generated markdown content.</p>
 </details>
 <hr>
 <a id='generate_markdown_from_doc'></a>
 <details style='margin-bottom: 10px;'>
   <summary> **generate_markdown_from_doc** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 26-104
+  - **Defined on lines:** 25-103
 
   <h4>Purpose</h4>
-  <p>Generates Markdown content from a `Documentation` object.</p>
+  <p>Generates markdown documentation from a `Documentation` object.</p>
   <h4>Details</h4>
-  <p>This function takes a `Documentation` object and a header string as input. It processes the symbols in the documentation to create a structured Markdown document, including sections for overview, key components, and detailed information about each symbol.</p>
+  <p>This function takes a `Documentation` object and a header string as input, sorts the symbols by their start line, and generates markdown content for each symbol using `generate_md_for_symbol`. The resulting markdown is returned as a single string.</p>
   <h4>Usage</h4>
-  <p>To use this function, call it with a `Documentation` object and a header string. For example:
+  <p>To use this function, call `generate_markdown_from_doc(doc: Documentation, header: str)` with a `Documentation` object and a header string. The function will return the generated markdown content.</p>
+</details>
+<hr>
+<a id='generate_md_for_symbol'></a>
+<details style='margin-bottom: 10px;'>
+  <summary> **generate_md_for_symbol** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-```python
-doc = Documentation(language='Python', overview='This is an overview of the file.', key_components=['symbol1', 'symbol2'], symbols=[...])
-md = generate_markdown_from_doc(doc, '# Documentation for `file_name.py`')
-```
-</p>
-  <h4>Limitations</h4>
-  <p>The function assumes that the `Documentation` object has a specific structure and may not handle all edge cases.</p>
+  - **Defined on lines:** 105-162
+
+  <h4>Purpose</h4>
+  <p>Generates markdown documentation for a single symbol.</p>
+  <h4>Details</h4>
+  <p>This function takes a symbol object as input, creates an anchor for linking from the overview, and generates markdown content for the symbol's purpose, details, usage, and limitations. The resulting markdown is returned as a list of strings.</p>
+  <h4>Usage</h4>
+  <p>To use this function, call `generate_md_for_symbol(s: Symbol)` with a symbol object. The function will return the generated markdown content.</p>
+</details>
+<hr>
+<a id='kind_badge'></a>
+<details style='margin-bottom: 10px;'>
+  <summary> **kind_badge** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+
+  - **Defined on lines:** 164-203
+
+  <h4>Purpose</h4>
+  <p>Creates a colored badge for the kind of symbol.</p>
+  <h4>Details</h4>
+  <p>This function takes the kind of symbol as input and returns a colored badge string. The color is determined based on a predefined mapping of kinds to colors.</p>
+  <h4>Usage</h4>
+  <p>To use this function, call `kind_badge(kind: str)` with the kind of symbol. The function will return the generated markdown content.</p>
 </details>
 <hr>
