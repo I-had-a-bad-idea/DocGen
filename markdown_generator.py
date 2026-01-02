@@ -1,6 +1,6 @@
 from pathlib import Path
 from datetime import datetime
-from llm_summary import summarize_code_in_markdown, Documentation, Input
+from llm_summary import summarize_code, Documentation, Input
 
 async def generate_markdown_from_symbols_async(file_path: str, code: str) -> str:
 
@@ -14,7 +14,7 @@ async def generate_markdown_from_symbols_async(file_path: str, code: str) -> str
 
     header = "\n".join(header_lines)
 
-    doc = await summarize_code_in_markdown(input)
+    doc = await summarize_code(input)
 
     md = generate_markdown_from_doc(doc, header)
 
@@ -41,28 +41,16 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     md_lines.append(",\n".join(doc.key_components))
     md_lines.append("## Requirements")
     md_lines.append(",\n".join(doc.requirements))
+    md_lines.append("## Usage")
+    md_lines.append(doc.usage)
     md_lines.append("\n---\n")  # separator before detailed sections
 
     # Symbols
     md_lines.append("")
-    md_lines.append("# Public Symbols")
+    md_lines.append("# Symbols")
     md_lines.append("") # Spacing
 
-
-    # First non-internal symbols
     for s in doc.symbols:
-        if s.internal:
-            continue
-
-        md_lines.extend(generate_md_for_symbol(s))
-
-    md_lines.append("# Internal Symbols")
-    md_lines.append("")
-    # Then internal symbols
-    for s in doc.symbols:
-        if not s.internal:
-            continue
-
         md_lines.extend(generate_md_for_symbol(s))
 
     return "\n".join(md_lines)
