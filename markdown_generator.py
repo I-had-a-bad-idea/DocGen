@@ -26,16 +26,15 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     doc.symbols.sort(key=lambda s: s.start_line)
 
     # # Create a table of contents 
-    # md_lines.append("# Table of Contents\n")
-    # for s in doc.symbols:
-    #     # Create an anchor-friendly name (for clickable links)
-    #     anchor = s.name.lower().replace(" ", "-")
-    #     md_lines.append(f"- [{s.name}](#{anchor}) `{s.kind}`")
-    # md_lines.append("\n---\n")  # separator before detailed sections
+    md_lines.append("# Table of Contents\n")
+    for s in doc.symbols:
+        slug = (s.name + f" ({s.kind})").lower().replace(" ", "-").replace("(", "").replace(")", "")
+        md_lines.append(f"- [{s.name} ({s.kind})](#{slug})")
+    md_lines.append("\n---\n")
     
     # Overview
     md_lines.append("# Overview")
-    md_lines.append(doc.overview + "                                   ")
+    md_lines.append(doc.overview + "\t\t\t")
     md_lines.append(f"**Language**: {doc.language}\n")
     md_lines.append("## Key components")
     md_lines.append(",\n".join(doc.key_components))
@@ -60,7 +59,7 @@ def generate_md_for_symbol(s) -> list[str]:
     md = []
 
     # Strong heading
-    md.append(f"## {s.name} ({s.kind})")
+    md.append(f"\n## {s.name} ({s.kind})")
     md.append("")
 
     # Metadata block
