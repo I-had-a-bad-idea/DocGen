@@ -57,49 +57,44 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
 
 
 def generate_md_for_symbol(s) -> list[str]:
-    md_lines = []
+    md = []
 
-    # Create an anchor for linking from overview
-    anchor = s.name.lower().replace(" ", "-")
-    md_lines.append(f"<a id='{anchor}'></a>")
-    md_lines.append(f"<details style='margin-bottom: 10px;'>")
-    md_lines.append(f"  <summary> **{s.name}** {kind_badge(s.kind)}</summary>\n")
+    # Strong heading
+    md.append(f"## {s.name} ({s.kind})")
+    md.append("")
 
+    # Metadata block
     if s.start_line == s.end_line:
-        md_lines.append(f"  - **Defined on line:** {s.start_line}")
+        md.append(f"- **Defined on line:** {s.start_line}")
     else:
-        md_lines.append(f"  - **Defined on lines:** {s.start_line}-{s.end_line}")
+        md.append(f"- **Defined on lines:** {s.start_line}–{s.end_line}")
 
     if s.parent:
-        md_lines.append(f"  - **Parent:** {s.parent}")
-    md_lines.append("")  # blank line before summaries
+        md.append(f"- **Parent:** {s.parent}")
 
-    md_lines.append(f"  <h4>Purpose</h4>")
-    md_lines.append(f"  <p>{s.purpose}</p>")
+    md.append(f"- **Symbol kind:** {s.kind}")
+    md.append("")
 
-    md_lines.append(f"  <h4>Details</h4>")
-    md_lines.append(f"  <p>{s.details}</p>")
+    # Semantic sections
+    md.append("### Purpose")
+    md.append(s.purpose or "Not specified.")
+    md.append("")
 
-    md_lines.append(f"  <h4>Usage</h4>")
-    md_lines.append(f"  <p>{s.usage}</p>")
+    md.append("### Details")
+    md.append(s.details or "Not specified.")
+    md.append("")
+
+    md.append("### Usage")
+    md.append(s.usage or "Not specified.")
+    md.append("")
 
     if s.limitations:
-        md_lines.append(f"  <h4>Limitations</h4>")
-        md_lines.append(f"  <p>{",\n".join(s.limitations)}</p>")
+        md.append("### Limitations")
+        md.append("\n".join(f"- {l}" for l in s.limitations))
+        md.append("")
 
-    # if s.examples:
-    #     md_lines.append(f"<h4>Examples</h4>")
-    #     md_lines.append("")
-    #     md_lines.append(f"```{doc.language}")
-    #     md_lines.append("\n".join(s.examples).strip())
-    #     md_lines.append("```")
-    #     md_lines.append("")
-
-    md_lines.append(f"</details>")
-    md_lines.append("<hr>")  # horizontal rule between symbols
-
-
-    return md_lines
+    md.append("---")
+    return md
 
 # Helper to create a colored badge for kind
 def kind_badge(kind: str) -> str:
