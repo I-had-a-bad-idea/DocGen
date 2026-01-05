@@ -28,8 +28,8 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     # # Create a table of contents 
     md_lines.append("# Table of Contents\n")
     for s in doc.symbols:
-        slug = (s.name + f" ({s.kind})").lower().replace(" ", "-").replace("(", "").replace(")", "")
-        md_lines.append(f"- [{s.name} ({s.kind})](#{slug})")
+        slug = (s.name).lower().replace(" ", "-")
+        md_lines.append(f"- [{s.name} {kind_badge(s.kind)}](#{slug})")
     md_lines.append("\n---\n")
     
     # Overview
@@ -59,7 +59,7 @@ def generate_md_for_symbol(s) -> list[str]:
     md = []
 
     # Strong heading
-    md.append(f"\n## {s.name} ({s.kind})")
+    md.append(f"\n## {s.name} {kind_badge(s.kind)}")
     md.append("")
 
     # Metadata block
@@ -106,7 +106,8 @@ def kind_badge(kind: str) -> str:
         "module": "brown"
     }
     color = colors.get(kind.lower(), "gray")
-    return f"<span style='background-color:{color}; color:white; padding:2px 6px; border-radius:4px;'>{kind}</span>"
+    return f"![{kind}](https://img.shields.io/badge/{kind}-{color})"
+
 
 def save_markdown(file_path: str, markdown_content: str, output_dir: str = "docs"):
 
