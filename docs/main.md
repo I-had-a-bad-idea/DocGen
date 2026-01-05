@@ -1,12 +1,30 @@
 # **Documentation for `main.py`**
-> _Generated on 2026-01-02 16:43:13_
+> _Generated on 2026-01-05 12:51:22_
 
 > _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_
 
 
 
+# Table of Contents
+
+- [queue ![set](https://img.shields.io/badge/set-gray?style=flat)](#queue)
+- [LANGUAGES ![dict](https://img.shields.io/badge/dict-gray?style=flat)](#languages)
+- [ignored_languages ![list](https://img.shields.io/badge/list-gray?style=flat)](#ignored_languages)
+- [ignored_folders ![list](https://img.shields.io/badge/list-gray?style=flat)](#ignored_folders)
+- [is_supported_language ![function](https://img.shields.io/badge/function-green?style=flat)](#is_supported_language)
+- [is_allowed_folder ![function](https://img.shields.io/badge/function-green?style=flat)](#is_allowed_folder)
+- [get_code_from_file ![function](https://img.shields.io/badge/function-green?style=flat)](#get_code_from_file)
+- [generate_docs_for_file ![function](https://img.shields.io/badge/function-green?style=flat)](#generate_docs_for_file)
+- [get_files_for_folder ![function](https://img.shields.io/badge/function-green?style=flat)](#get_files_for_folder)
+- [get_files_for_path ![function](https://img.shields.io/badge/function-green?style=flat)](#get_files_for_path)
+- [generate_docs ![function](https://img.shields.io/badge/function-green?style=flat)](#generate_docs)
+- [load_docgen_ignore ![function](https://img.shields.io/badge/function-green?style=flat)](#load_docgen_ignore)
+- [main ![function](https://img.shields.io/badge/function-green?style=flat)](#main)
+
+---
+
 # Overview
-A script to generate documentation for various programming languages.                                   
+A script to generate documentation for various programming languages.			
 **Language**: Python
 
 ## Key components
@@ -24,198 +42,220 @@ generate_docs,
 load_docgen_ignore,
 main
 ## Requirements
-Python 3.6 or later,
-markdown_generator library,
-tqdm library,
-asyncio library,
-pathlib library
+Python 3.6+
 ## Usage
-Run the script with a folder path as an argument to generate documentation for all supported files in that folder and its subfolders.
+Run the script with a folder path as an argument to generate documentation for all supported files within that folder and its subfolders.
 
 ---
 
 
 # Symbols
 
-<a id='queue'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **queue** <span style='background-color:gray; color:white; padding:2px 6px; border-radius:4px;'>set</span></summary>
 
-  - **Defined on lines:** 1-2
+## queue ![set](https://img.shields.io/badge/set-gray?style=flat)
 
-  <h4>Purpose</h4>
-  <p>A set to store file paths for processing.</p>
-  <h4>Details</h4>
-  <p></p>
-  <h4>Usage</h4>
-  <p>Add file paths to the queue using `queue.add(element_path)`.</p>
-</details>
-<hr>
-<a id='languages'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **LANGUAGES** <span style='background-color:gray; color:white; padding:2px 6px; border-radius:4px;'>dict</span></summary>
+- **Defined on lines:** 1–2
+- **Symbol kind:** set
 
-  - **Defined on lines:** 4-56
+### Purpose
+A set to store file paths for processing.
 
-  <h4>Purpose</h4>
-  <p>A dictionary mapping file extensions to their corresponding programming languages.</p>
-  <h4>Details</h4>
-  <p></p>
-  <h4>Usage</h4>
-  <p>Check if a file is supported by looking up its extension in the `LANGUAGES` dictionary.</p>
-</details>
-<hr>
-<a id='ignored_languages'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **ignored_languages** <span style='background-color:gray; color:white; padding:2px 6px; border-radius:4px;'>list</span></summary>
+### Details
+Not specified.
 
-  - **Defined on lines:** 58-60
+### Usage
+Add file paths to the queue using `queue.add(element_path)`.
 
-  <h4>Purpose</h4>
-  <p>A list of file extensions to ignore.</p>
-  <h4>Details</h4>
-  <p></p>
-  <h4>Usage</h4>
-  <p>Add file extensions to the `ignored_languages` list to exclude them from processing.</p>
-</details>
-<hr>
-<a id='ignored_folders'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **ignored_folders** <span style='background-color:gray; color:white; padding:2px 6px; border-radius:4px;'>list</span></summary>
+---
 
-  - **Defined on lines:** 62-64
+## LANGUAGES ![dict](https://img.shields.io/badge/dict-gray?style=flat)
 
-  <h4>Purpose</h4>
-  <p>A list of folder names to ignore.</p>
-  <h4>Details</h4>
-  <p></p>
-  <h4>Usage</h4>
-  <p>Add folder names to the `ignored_folders` list to exclude them from processing.</p>
-</details>
-<hr>
-<a id='is_supported_language'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **is_supported_language** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+- **Defined on lines:** 4–57
+- **Symbol kind:** dict
 
-  - **Defined on lines:** 66-78
+### Purpose
+A dictionary mapping file extensions to their corresponding programming languages.
 
-  <h4>Purpose</h4>
-  <p>Check if a file is supported by its extension.</p>
-  <h4>Details</h4>
-  <p>Returns `True` if the file extension is in the `LANGUAGES` dictionary, otherwise returns `False`.</p>
-  <h4>Usage</h4>
-  <p>Use this function to determine if a file should be processed.</p>
-</details>
-<hr>
-<a id='is_allowed_folder'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **is_allowed_folder** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+### Details
+Not specified.
 
-  - **Defined on lines:** 80-92
+### Usage
+Check if a file is supported by looking up its extension in `LANGUAGES`.
 
-  <h4>Purpose</h4>
-  <p>Check if a folder is allowed for processing.</p>
-  <h4>Details</h4>
-  <p>Returns `True` if the folder is not in the `ignored_folders` list and is not ignored by its name or parent folders, otherwise returns `False`.</p>
-  <h4>Usage</h4>
-  <p>Use this function to determine if a folder should be processed.</p>
-</details>
-<hr>
-<a id='get_code_from_file'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **get_code_from_file** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+---
 
-  - **Defined on lines:** 94-108
+## ignored_languages ![list](https://img.shields.io/badge/list-gray?style=flat)
 
-  <h4>Purpose</h4>
-  <p>Read the content of a file and return it as a string.</p>
-  <h4>Details</h4>
-  <p>Returns the contents of the file if successful, otherwise returns an empty string and prints an error message.</p>
-  <h4>Usage</h4>
-  <p>Use this function to read the code from a file.</p>
-</details>
-<hr>
-<a id='generate_docs_for_file'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **generate_docs_for_file** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+- **Defined on lines:** 59–60
+- **Symbol kind:** list
 
-  - **Defined on lines:** 110-124
+### Purpose
+A list of file extensions to ignore.
 
-  <h4>Purpose</h4>
-  <p>Generate documentation for a single file.</p>
-  <h4>Details</h4>
-  <p>Reads the code from the file and calls `generate_markdown` to generate documentation if the file is supported.</p>
-  <h4>Usage</h4>
-  <p>Use this function to generate documentation for a specific file.</p>
-</details>
-<hr>
-<a id='get_files_for_folder'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **get_files_for_folder** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+### Details
+Not specified.
 
-  - **Defined on lines:** 126-158
+### Usage
+Add file extensions to the `ignored_languages` list to exclude them from processing.
 
-  <h4>Purpose</h4>
-  <p>Recursively get all files in a folder and its subfolders.</p>
-  <h4>Details</h4>
-  <p>Iterates over the elements of the folder, checks if each element is a file or directory, and processes it accordingly. Uses `tqdm` to display progress.</p>
-  <h4>Usage</h4>
-  <p>Use this function to recursively process all files in a folder.</p>
-</details>
-<hr>
-<a id='get_files_for_path'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **get_files_for_path** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+---
 
-  - **Defined on lines:** 160-174
+## ignored_folders ![list](https://img.shields.io/badge/list-gray?style=flat)
 
-  <h4>Purpose</h4>
-  <p>Get all files for a given path, whether it's a folder or a file.</p>
-  <h4>Details</h4>
-  <p>If the path is a directory, calls `get_files_for_folder` to process all files in the directory. If the path is a file, checks if it's supported and adds it to the queue.</p>
-  <h4>Usage</h4>
-  <p>Use this function to get all files for a given path.</p>
-</details>
-<hr>
-<a id='generate_docs'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **generate_docs** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+- **Defined on lines:** 62–63
+- **Symbol kind:** list
 
-  - **Defined on lines:** 176-184
+### Purpose
+A list of folder names to ignore.
 
-  <h4>Purpose</h4>
-  <p>Generate documentation for all files in the queue.</p>
-  <h4>Details</h4>
-  <p>Creates a list of tasks to generate documentation for each file in the queue and runs them concurrently using `asyncio`.</p>
-  <h4>Usage</h4>
-  <p>Use this function to generate documentation for all files in the queue.</p>
-</details>
-<hr>
-<a id='load_docgen_ignore'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **load_docgen_ignore** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+### Details
+Not specified.
 
-  - **Defined on lines:** 186-204
+### Usage
+Add folder names to the `ignored_folders` list to exclude them from processing.
 
-  <h4>Purpose</h4>
-  <p>Load the .docgen_ignore file and add ignored languages and folders to their respective lists.</p>
-  <h4>Details</h4>
-  <p>Reads the .docgen_ignore file if it exists, adds each line to the `ignored_languages` or `ignored_folders` list based on whether it ends with a slash or not.</p>
-  <h4>Usage</h4>
-  <p>Use this function to load the .docgen_ignore file and configure ignored languages and folders.</p>
-</details>
-<hr>
-<a id='main'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **main** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+---
 
-  - **Defined on lines:** 206-234
+## is_supported_language ![function](https://img.shields.io/badge/function-green?style=flat)
 
-  <h4>Purpose</h4>
-  <p>The main function to run the script.</p>
-  <h4>Details</h4>
-  <p>Checks if a path is provided as an argument, loads the .docgen_ignore file, processes all files in the folder and its subfolders, generates documentation for each file, and prints a success message.</p>
-  <h4>Usage</h4>
-  <p>Run this function to execute the script.</p>
-</details>
-<hr>
+- **Defined on lines:** 65–82
+- **Symbol kind:** function
+
+### Purpose
+Check if a file is supported by its extension.
+
+### Details
+Returns `True` if the file extension is in `LANGUAGES`, otherwise returns `False`.
+
+### Usage
+Use this function to determine if a file should be processed.
+
+---
+
+## is_allowed_folder ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 84–102
+- **Symbol kind:** function
+
+### Purpose
+Check if a folder is allowed to be processed based on its name and parent directories.
+
+### Details
+Returns `True` if the folder is not in `ignored_folders`, otherwise returns `False`.
+
+### Usage
+Use this function to determine if a folder should be processed.
+
+---
+
+## get_code_from_file ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 104–123
+- **Symbol kind:** function
+
+### Purpose
+Read the content of a file and return it as a string.
+
+### Details
+Returns an empty string if the file cannot be read or if there is an error.
+
+### Usage
+Use this function to get the code from a file path.
+
+---
+
+## generate_docs_for_file ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 125–143
+- **Symbol kind:** function
+
+### Purpose
+Generate documentation for a single file.
+
+### Details
+Reads the code from the file and calls `generate_markdown` to generate documentation.
+
+### Usage
+Use this function to process a single file.
+
+---
+
+## get_files_for_folder ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 145–203
+- **Symbol kind:** function
+
+### Purpose
+Recursively get all files in a folder and its subfolders.
+
+### Details
+Uses `tqdm` to display progress and checks if each file is supported and allowed before adding it to the queue.
+
+### Usage
+Use this function to process all files in a folder.
+
+---
+
+## get_files_for_path ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 205–231
+- **Symbol kind:** function
+
+### Purpose
+Get all files from a given path, which can be a folder or a file.
+
+### Details
+If the path is a directory, it calls `load_docgen_ignore` and then processes the folder. If the path is a file, it checks if the file is supported and adds it to the queue.
+
+### Usage
+Use this function to process all files in a given path.
+
+---
+
+## generate_docs ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 233–251
+- **Symbol kind:** function
+
+### Purpose
+Generate documentation for all files in the queue.
+
+### Details
+Creates tasks to process each file and uses `tqdm_asyncio` to display progress.
+
+### Usage
+Use this function to generate documentation for all files.
+
+---
+
+## load_docgen_ignore ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 253–281
+- **Symbol kind:** function
+
+### Purpose
+Load the `.docgen_ignore` file and add ignored languages and folders to their respective lists.
+
+### Details
+Reads the `.docgen_ignore` file line by line, adding each line to `ignored_folders` if it ends with a slash or to `ignored_languages` if it does not start with a dot.
+
+### Usage
+Use this function to load ignored files and folders from a configuration file.
+
+---
+
+## main ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 283–306
+- **Symbol kind:** function
+
+### Purpose
+The main function to run the script.
+
+### Details
+Checks if a path is provided as an argument, loads the `.docgen_ignore` file, processes all files in the folder and its subfolders, and generates documentation for each file.
+
+### Usage
+Run this function to start processing files.
+
+---

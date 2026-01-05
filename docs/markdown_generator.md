@@ -1,84 +1,169 @@
 # **Documentation for `markdown_generator.py`**
-> _Generated on 2026-01-02 16:43:13_
+> _Generated on 2026-01-05 12:51:22_
 
 > _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_
 
 
 
+# Table of Contents
+
+- [generate_markdown_from_symbols_async ![function](https://img.shields.io/badge/function-green?style=flat)](#generate_markdown_from_symbols_async)
+- [generate_markdown_from_doc ![function](https://img.shields.io/badge/function-green?style=flat)](#generate_markdown_from_doc)
+- [generate_md_for_symbol ![function](https://img.shields.io/badge/function-green?style=flat)](#generate_md_for_symbol)
+- [kind_badge ![function](https://img.shields.io/badge/function-green?style=flat)](#kind_badge)
+- [save_markdown ![function](https://img.shields.io/badge/function-green?style=flat)](#save_markdown)
+- [generate_markdown ![function](https://img.shields.io/badge/function-green?style=flat)](#generate_markdown)
+
+---
+
 # Overview
-Generates markdown documentation for Python files based on their symbols.                                   
+Generates markdown documentation for Python files.			
 **Language**: python
 
 ## Key components
 generate_markdown_from_symbols_async,
 generate_markdown_from_doc,
 generate_md_for_symbol,
-kind_badge
+kind_badge,
+save_markdown
 ## Requirements
 pathlib,
 datetime,
 llm_summary
 ## Usage
-To use this file, call `generate_markdown(file_path: str, code: str)` with the path to a Python file and its source code. The function will return the generated markdown content.
+To generate markdown documentation for a Python file, call the `generate_markdown` function with the file path and code as arguments.
 
 ---
 
 
 # Symbols
 
-<a id='generate_markdown_from_symbols_async'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **generate_markdown_from_symbols_async** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
 
-  - **Defined on lines:** 1-23
+## generate_markdown_from_symbols_async ![function](https://img.shields.io/badge/function-green?style=flat)
 
-  <h4>Purpose</h4>
-  <p>Asynchronously generates markdown documentation for a Python file based on its symbols.</p>
-  <h4>Details</h4>
-  <p>This function takes the path to a Python file and its source code as input, processes it using `summarize_code` from the `llm_summary` module, and then generates markdown content using `generate_markdown_from_doc`. The resulting markdown is saved to a file in the specified output directory.</p>
-  <h4>Usage</h4>
-  <p>To use this function, call `await generate_markdown_from_symbols_async(file_path: str, code: str)` with the path to a Python file and its source code. The function will return the generated markdown content.</p>
-</details>
-<hr>
-<a id='generate_markdown_from_doc'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **generate_markdown_from_doc** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+- **Defined on lines:** 1–25
+- **Symbol kind:** function
 
-  - **Defined on lines:** 25-103
+### Purpose
+Asynchronously generates markdown documentation for a Python file.
 
-  <h4>Purpose</h4>
-  <p>Generates markdown documentation from a `Documentation` object.</p>
-  <h4>Details</h4>
-  <p>This function takes a `Documentation` object and a header string as input, sorts the symbols by their start line, and generates markdown content for each symbol using `generate_md_for_symbol`. The resulting markdown is returned as a single string.</p>
-  <h4>Usage</h4>
-  <p>To use this function, call `generate_markdown_from_doc(doc: Documentation, header: str)` with a `Documentation` object and a header string. The function will return the generated markdown content.</p>
-</details>
-<hr>
-<a id='generate_md_for_symbol'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **generate_md_for_symbol** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+### Details
+This function takes the file path and code as arguments, generates the markdown content using `generate_markdown_from_doc`, and saves it to a file in the specified output directory.
 
-  - **Defined on lines:** 105-162
+### Usage
+To use this function, call it with the file path and code as arguments. For example:
 
-  <h4>Purpose</h4>
-  <p>Generates markdown documentation for a single symbol.</p>
-  <h4>Details</h4>
-  <p>This function takes a symbol object as input, creates an anchor for linking from the overview, and generates markdown content for the symbol's purpose, details, usage, and limitations. The resulting markdown is returned as a list of strings.</p>
-  <h4>Usage</h4>
-  <p>To use this function, call `generate_md_for_symbol(s: Symbol)` with a symbol object. The function will return the generated markdown content.</p>
-</details>
-<hr>
-<a id='kind_badge'></a>
-<details style='margin-bottom: 10px;'>
-  <summary> **kind_badge** <span style='background-color:green; color:white; padding:2px 6px; border-radius:4px;'>function</span></summary>
+```python
+generate_markdown_from_symbols_async('path/to/file.py', 'code here')
+```
 
-  - **Defined on lines:** 164-203
 
-  <h4>Purpose</h4>
-  <p>Creates a colored badge for the kind of symbol.</p>
-  <h4>Details</h4>
-  <p>This function takes the kind of symbol as input and returns a colored badge string. The color is determined based on a predefined mapping of kinds to colors.</p>
-  <h4>Usage</h4>
-  <p>To use this function, call `kind_badge(kind: str)` with the kind of symbol. The function will return the generated markdown content.</p>
-</details>
-<hr>
+---
+
+## generate_markdown_from_doc ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 27–103
+- **Symbol kind:** function
+
+### Purpose
+Generates markdown content from a `Documentation` object.
+
+### Details
+This function takes a `Documentation` object and a header string as arguments, generates the markdown content by sorting symbols by line number, creating a table of contents, adding overview information, key components, requirements, usage, and detailed symbol information.
+
+### Usage
+To use this function, call it with a `Documentation` object and a header string. For example:
+
+```python
+doc = Documentation(...)
+header = "..."
+markdown_content = generate_markdown_from_doc(doc, header)
+```
+
+
+---
+
+## generate_md_for_symbol ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 105–143
+- **Symbol kind:** function
+
+### Purpose
+Generates markdown content for a symbol.
+
+### Details
+This function takes a symbol object as an argument, generates the markdown content by creating a strong heading, metadata block, purpose, details, usage, and limitations sections.
+
+### Usage
+To use this function, call it with a symbol object. For example:
+
+```python
+symbol = Symbol(...)
+markdown_content = generate_md_for_symbol(symbol)
+```
+
+
+---
+
+## kind_badge ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 145–162
+- **Symbol kind:** function
+
+### Purpose
+Creates a colored badge for the symbol kind.
+
+### Details
+This function takes a symbol kind as an argument and returns a markdown badge string based on the color associated with that kind.
+
+### Usage
+To use this function, call it with a symbol kind. For example:
+
+```python
+color_badge = kind_badge('function')
+```
+
+
+---
+
+## save_markdown ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 164–203
+- **Symbol kind:** function
+
+### Purpose
+Saves markdown content to a file.
+
+### Details
+This function takes the file path, markdown content, and output directory as arguments, creates the output directory if it doesn't exist, writes the markdown content to a file in the specified output directory, and returns the file path.
+
+### Usage
+To use this function, call it with the file path, markdown content, and output directory. For example:
+
+```python
+save_markdown('path/to/file.md', 'markdown content here', 'docs')
+```
+
+
+---
+
+## generate_markdown ![function](https://img.shields.io/badge/function-green?style=flat)
+
+- **Defined on lines:** 205–213
+- **Symbol kind:** function
+
+### Purpose
+Generates markdown documentation for a Python file.
+
+### Details
+This function is an alias for `generate_markdown_from_symbols_async` and takes the file path and code as arguments, generates the markdown content using `generate_markdown_from_symbols_async`, and saves it to a file in the specified output directory.
+
+### Usage
+To use this function, call it with the file path and code. For example:
+
+```python
+generate_markdown('path/to/file.py', 'code here')
+```
+
+
+---

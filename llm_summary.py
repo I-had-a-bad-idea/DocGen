@@ -14,7 +14,7 @@ For EACH symbol:
 - Fill out the JSON below.
 - Do NOT keep the code
 - Do NOT invent new symbols
-- Key components should one be a few, not all
+- Key components should not be all symbols!
 
 
 Return ONLY valid JSON matching this schema:
