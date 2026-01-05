@@ -106,7 +106,7 @@ def kind_badge(kind: str) -> str:
         "module": "brown"
     }
     color = colors.get(kind.lower(), "gray")
-    return f"![{kind}](https://img.shields.io/badge/{kind}-{color})"
+    return f"![{kind}](https://img.shields.io/badge/{kind}-{color}&style=flat)"
 
 
 def save_markdown(file_path: str, markdown_content: str, output_dir: str = "docs"):

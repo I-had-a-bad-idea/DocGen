@@ -1,5 +1,5 @@
 # **Documentation for `llm_summary.py`**
-> _Generated on 2026-01-05 12:16:07_
+> _Generated on 2026-01-05 12:45:42_
 
 > _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_
 
@@ -7,23 +7,23 @@
 
 # Table of Contents
 
-- [AsyncClient (class)](#asyncclient-class)
-- [BaseModel (class)](#basemodel-class)
-- [tqdm_asyncio (module)](#tqdm_asyncio-module)
-- [json (module)](#json-module)
-- [SymbolOutput (class)](#symboloutput-class)
-- [Documentation (class)](#documentation-class)
-- [Input (class)](#input-class)
-- [MAX_CONTEXT (variable)](#max_context-variable)
-- [ollama (variable)](#ollama-variable)
-- [OPTIONS (variable)](#options-variable)
-- [summarize_code_in_chunk (function)](#summarize_code_in_chunk-function)
-- [summarize_code (function)](#summarize_code-function)
+- [AsyncClient ![class](https://img.shields.io/badge/class-purple&style=flat)](#asyncclient)
+- [BaseModel ![class](https://img.shields.io/badge/class-purple&style=flat)](#basemodel)
+- [tqdm_asyncio ![module](https://img.shields.io/badge/module-brown&style=flat)](#tqdm_asyncio)
+- [json ![module](https://img.shields.io/badge/module-brown&style=flat)](#json)
+- [SymbolOutput ![class](https://img.shields.io/badge/class-purple&style=flat)](#symboloutput)
+- [Documentation ![class](https://img.shields.io/badge/class-purple&style=flat)](#documentation)
+- [Input ![class](https://img.shields.io/badge/class-purple&style=flat)](#input)
+- [MAX_CONTEXT ![variable](https://img.shields.io/badge/variable-blue&style=flat)](#max_context)
+- [ollama ![variable](https://img.shields.io/badge/variable-blue&style=flat)](#ollama)
+- [OPTIONS ![variable](https://img.shields.io/badge/variable-blue&style=flat)](#options)
+- [summarize_code_in_chunk ![function](https://img.shields.io/badge/function-green&style=flat)](#summarize_code_in_chunk)
+- [summarize_code ![function](https://img.shields.io/badge/function-green&style=flat)](#summarize_code)
 
 ---
 
 # Overview
-This script is designed to summarize structured JSON describing code symbols using the Ollama AI model.			
+This file provides a function to summarize code using an OpenAI-like model.			
 **Language**: python
 
 ## Key components
@@ -40,11 +40,12 @@ OPTIONS,
 summarize_code_in_chunk,
 summarize_code
 ## Requirements
-Ollama AI model,
-Pydantic library,
-TQDM library
+OpenAI-like model,
+Pydantic for data validation,
+TQDM for progress tracking,
+JSON parsing and handling
 ## Usage
-To use this script, you need to have the Ollama AI model installed and running. You can then call the `summarize_code` function with an `Input` object containing the file path and code as arguments.
+To use this file, you need to have the OpenAI-like model installed. You can then call the `summarize_code` function with an `Input` object containing the code you want to summarize.
 
 ---
 
@@ -52,205 +53,194 @@ To use this script, you need to have the Ollama AI model installed and running. 
 # Symbols
 
 
-## AsyncClient (class)
+## AsyncClient ![class](https://img.shields.io/badge/class-purple&style=flat)
 
 - **Defined on line:** 1
 - **Symbol kind:** class
 
 ### Purpose
-An asynchronous client for interacting with Ollama AI models.
+An asynchronous client for interacting with an OpenAI-like model.
 
 ### Details
-This class is used to connect to the Ollama AI model and send requests for generating text based on prompts.
+Not specified.
 
 ### Usage
-To use this class, you need to create an instance of it and call its methods to generate text.
+Instantiate and use this class to interact with the model.
 
+---
 
+## BaseModel ![class](https://img.shields.io/badge/class-purple&style=flat)
 
-
-## BaseModel (class)
-
-- **Defined on line:** 3
+- **Defined on line:** 2
 - **Symbol kind:** class
 
 ### Purpose
-A base class for Pydantic models, which are used to define data structures with type annotations.
+A base class for Pydantic models, providing data validation and serialization.
 
 ### Details
-This class is used to define the structure of the `SymbolOutput`, `Documentation`, and `Input` classes.
+Not specified.
 
 ### Usage
-To use this class, you need to create an instance of it and call its methods to validate and serialize data.
+Use this class to define your own models with specific fields and constraints.
 
+---
 
+## tqdm_asyncio ![module](https://img.shields.io/badge/module-brown&style=flat)
 
+- **Defined on line:** 3
+- **Symbol kind:** module
 
-## tqdm_asyncio (module)
+### Purpose
+A wrapper for tqdm that works with asynchronous iterators.
+
+### Details
+Not specified.
+
+### Usage
+Use this module to add progress bars to your asynchronous code.
+
+---
+
+## json ![module](https://img.shields.io/badge/module-brown&style=flat)
 
 - **Defined on line:** 4
 - **Symbol kind:** module
 
 ### Purpose
-A module that provides a progress bar for asynchronous operations using the tqdm library.
+A module for JSON encoding and decoding.
 
 ### Details
-This module is used to display a progress bar while summarizing code in chunks.
+Not specified.
 
 ### Usage
-To use this module, you need to import it and call its functions to create a progress bar.
+Use this module to parse and serialize JSON data.
 
+---
 
+## SymbolOutput ![class](https://img.shields.io/badge/class-purple&style=flat)
 
-
-## json (module)
-
-- **Defined on line:** 5
-- **Symbol kind:** module
-
-### Purpose
-A module that provides functions for encoding and decoding JSON data.
-
-### Details
-This module is used to parse the response from the Ollama AI model and serialize it into a `Documentation` object.
-
-### Usage
-To use this module, you need to import it and call its functions to encode and decode JSON data.
-
-
-
-
-## SymbolOutput (class)
-
-- **Defined on lines:** 7–13
+- **Defined on lines:** 6–12
 - **Symbol kind:** class
 
 ### Purpose
-A Pydantic model that represents the output of summarizing a code symbol.
+A Pydantic model representing the output of a symbol in the documentation.
 
 ### Details
-This class is used to define the structure of the `SymbolOutput` object, which contains information about a code symbol such as its name, kind, start line, end line, parent, purpose, details, usage, and limitations.
+Not specified.
 
 ### Usage
-To use this class, you need to create an instance of it and call its methods to validate and serialize data.
+Use this class to define the structure of the symbol output.
 
+---
 
+## Documentation ![class](https://img.shields.io/badge/class-purple&style=flat)
 
-
-## Documentation (class)
-
-- **Defined on lines:** 15–24
+- **Defined on lines:** 13–20
 - **Symbol kind:** class
 
 ### Purpose
-A Pydantic model that represents the documentation of a code summary.
+A Pydantic model representing the documentation for a code summary.
 
 ### Details
-This class is used to define the structure of the `Documentation` object, which contains information about the overall purpose of the file, language, key components, requirements, usage, and symbols.
+Not specified.
 
 ### Usage
-To use this class, you need to create an instance of it and call its methods to validate and serialize data.
+Use this class to define the structure of the documentation output.
 
+---
 
+## Input ![class](https://img.shields.io/badge/class-purple&style=flat)
 
-
-## Input (class)
-
-- **Defined on lines:** 26–35
+- **Defined on lines:** 21–27
 - **Symbol kind:** class
 
 ### Purpose
-A Pydantic model that represents the input to the summarization function.
+A Pydantic model representing the input to the code summarization function.
 
 ### Details
-This class is used to define the structure of the `Input` object, which contains information about the file path and code.
+Not specified.
 
 ### Usage
-To use this class, you need to create an instance of it and call its methods to validate and serialize data.
+Use this class to define the structure of the input data.
 
+---
 
+## MAX_CONTEXT ![variable](https://img.shields.io/badge/variable-blue&style=flat)
 
-
-## MAX_CONTEXT (variable)
-
-- **Defined on line:** 37
+- **Defined on line:** 28
 - **Symbol kind:** variable
 
 ### Purpose
-The maximum context size for summarizing code in chunks.
+The maximum context size for code summarization.
 
 ### Details
-This variable is used to determine the maximum number of characters that can be processed by the Ollama AI model at once.
+Not specified.
 
 ### Usage
-To use this variable, you need to set its value before calling the `summarize_code` function.
+Use this variable to set the maximum context size for code summarization.
 
+---
 
+## ollama ![variable](https://img.shields.io/badge/variable-blue&style=flat)
 
-
-## ollama (variable)
-
-- **Defined on line:** 39
+- **Defined on line:** 29
 - **Symbol kind:** variable
 
 ### Purpose
-An instance of the AsyncClient class for interacting with the Ollama AI model.
+An instance of the AsyncClient class for interacting with the OpenAI-like model.
 
 ### Details
-This variable is used to send requests to the Ollama AI model and receive responses.
+Not specified.
 
 ### Usage
-To use this variable, you need to create an instance of it before calling the `summarize_code` function.
+Use this variable to interact with the model.
 
+---
 
+## OPTIONS ![variable](https://img.shields.io/badge/variable-blue&style=flat)
 
-
-## OPTIONS (variable)
-
-- **Defined on lines:** 41–43
+- **Defined on lines:** 30–32
 - **Symbol kind:** variable
 
 ### Purpose
-The options for generating text using the Ollama AI model.
+The options for interacting with the OpenAI-like model.
 
 ### Details
-This variable is used to specify the temperature and context size for generating text.
+Not specified.
 
 ### Usage
-To use this variable, you need to set its value before calling the `summarize_code` function.
+Use this variable to set the options for interacting with the model.
 
+---
 
+## summarize_code_in_chunk ![function](https://img.shields.io/badge/function-green&style=flat)
 
-
-## summarize_code_in_chunk (function)
-
-- **Defined on lines:** 45–62
+- **Defined on lines:** 34–52
 - **Symbol kind:** function
 
 ### Purpose
-A function that summarizes a code chunk using the Ollama AI model.
+A function to summarize a code chunk using the OpenAI-like model.
 
 ### Details
-This function takes an `Input` object as input and sends a request to the Ollama AI model to generate text based on a prompt. The response is then parsed and serialized into a `Documentation` object.
+Not specified.
 
 ### Usage
-To use this function, you need to call it with an `Input` object containing the file path and code as arguments.
+Use this function to summarize a code chunk.
 
+---
 
+## summarize_code ![function](https://img.shields.io/badge/function-green&style=flat)
 
-
-## summarize_code (function)
-
-- **Defined on lines:** 64–103
+- **Defined on lines:** 54–81
 - **Symbol kind:** function
 
 ### Purpose
-A function that summarizes a code file using the Ollama AI model.
+A function to summarize the entire code using the OpenAI-like model.
 
 ### Details
-This function takes an `Input` object as input and checks if the length of the code is greater than the maximum context size. If it is, the code is split into chunks and summarized in parallel using the `summarize_code_in_chunk` function. The results are then combined into a single `Documentation` object.
+Not specified.
 
 ### Usage
-To use this function, you need to call it with an `Input` object containing the file path and code as arguments.
+Use this function to summarize the entire code.
 
-
+---
