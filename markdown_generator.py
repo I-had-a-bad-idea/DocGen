@@ -28,7 +28,7 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     # # Create a table of contents 
     md_lines.append("# Table of Contents\n")
     for s in doc.symbols:
-        slug = (s.name).lower().replace(" ", "-")
+        slug = (s.name + "-" + s.kind).lower().replace(" ", "-")
         md_lines.append(f"- [{s.name} {kind_badge(s.kind)}](#{slug})")
     md_lines.append("\n---\n")
     
