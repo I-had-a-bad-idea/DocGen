@@ -17,6 +17,7 @@ For EACH symbol:
 - Key components should not be all symbols!
 - Usage should contain code if it makes sense
 - Someone new to the project must understand it.
+- The definition should show the variable, function, class definition, without the body. ONLY the actual definition, NO body.
 
 
 Return ONLY valid JSON matching this schema:
@@ -33,6 +34,7 @@ Return ONLY valid JSON matching this schema:
       "kind": "the_symbol_type",
       "start_line": 0,
       "end_line": 0,
+      "definition": "some_code",
       "parent": "",
       "purpose": "",
       "details": "",
@@ -51,6 +53,7 @@ class SymbolOutput(BaseModel):
     kind: str
     start_line: int
     end_line: int
+    definition: str
     parent: str
     purpose: str
     details: str

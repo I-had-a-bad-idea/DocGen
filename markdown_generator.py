@@ -1,6 +1,6 @@
 from pathlib import Path
 from datetime import datetime
-from llm_summary import summarize_code, Documentation, Input
+from llm_summary import summarize_code, Documentation, Input, SymbolOutput
 
 async def generate_markdown_from_symbols_async(file_path: str, code: str) -> str:
 
@@ -55,7 +55,7 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     return "\n".join(md_lines)
 
 
-def generate_md_for_symbol(s) -> list[str]:
+def generate_md_for_symbol(s: SymbolOutput) -> list[str]:
     md = []
 
     # Strong heading
@@ -73,6 +73,9 @@ def generate_md_for_symbol(s) -> list[str]:
 
     md.append(f"- **Symbol kind:** {s.kind}")
     md.append("")
+
+    md.append("### Definition")
+    md.append(s.definition)
 
     # Semantic sections
     md.append("### Purpose")
