@@ -15,6 +15,8 @@ For EACH symbol:
 - Do NOT keep the code
 - Do NOT invent new symbols
 - Key components should not be all symbols!
+- Usage should contain code if it makes sense
+- Someone new to the project must understand it.
 
 
 Return ONLY valid JSON matching this schema:
