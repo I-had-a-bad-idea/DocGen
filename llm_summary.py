@@ -14,6 +14,7 @@ For EACH symbol:
 - Fill out the JSON below.
 - Do NOT keep the code
 - Do NOT invent new symbols
+- Always write details
 - Key components should not be all symbols!
 - Usage should contain code if it makes sense
 - Someone new to the project must understand it.
