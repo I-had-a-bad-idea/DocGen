@@ -1,5 +1,5 @@
 # **Documentation for `llm_summary.py`**
-> _Generated on 2026-01-06 14:19:59_
+> _Generated on 2026-01-06 14:37:43_
 
 > _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_
 
@@ -19,7 +19,7 @@
 ---
 
 # Overview
-This file provides a function to summarize code symbols using the Ollama AI model.			
+This file contains a Python script for summarizing code symbols using the Ollama AI model.			
 **Language**: python
 
 ## Key components
@@ -34,9 +34,10 @@ summarize_code
 ## Requirements
 Ollama AI model,
 Pydantic library,
-tqdm.asyncio library
+tqdm.asyncio library,
+json library
 ## Usage
-To use this file, you need to have the Ollama AI model installed and running. You can then call the `summarize_code` function with an `Input` object containing the file path and code as arguments.
+To use this file, you need to have the Ollama AI model installed and running. You can then call the `summarize_code` function with an `Input` object containing the code you want to summarize.
 
 ---
 
@@ -46,128 +47,200 @@ To use this file, you need to have the Ollama AI model installed and running. Yo
 
 ## SymbolOutput ![class](https://img.shields.io/badge/class-purple?style=flat)
 
-- **Defined on lines:** 12–30
+- **Defined on lines:** 10–23
 - **Symbol kind:** class
 
+### Definition
+class SymbolOutput(BaseModel):
+    name: str
+    kind: str
+    start_line: int
+    end_line: int
+    definition: str
+    parent: str
+    purpose: str
+    details: str
+    usage: str
+    limitations: list[str]
 ### Purpose
-A Pydantic model to represent the output of a symbol summary.
+Represents the output of a symbol.
 
 ### Details
-This class has fields for the name, kind, start line, end line, parent, purpose, details, usage, and limitations of a symbol.
+Not specified.
 
 ### Usage
-To use this class, you can create an instance with the desired values and then access its fields as needed.
+To use this class, you need to create an instance with the desired values for each attribute.
 
 ---
 
 ## Documentation ![class](https://img.shields.io/badge/class-purple?style=flat)
 
-- **Defined on lines:** 32–48
+- **Defined on lines:** 25–40
 - **Symbol kind:** class
 
+### Definition
+class Documentation(BaseModel):
+    overview: str
+    language: str
+    key_components: list[str]
+    requirements: list[str]
+    usage: str
+    symbols: list[SymbolOutput]
 ### Purpose
-A Pydantic model to represent the documentation of a code summary.
+Represents the documentation of a code file.
 
 ### Details
-This class has fields for the overview, language, key components, requirements, usage, and symbols of a code summary.
+Not specified.
 
 ### Usage
-To use this class, you can create an instance with the desired values and then access its fields as needed.
+To use this class, you need to create an instance with the desired values for each attribute.
 
 ---
 
 ## Input ![class](https://img.shields.io/badge/class-purple?style=flat)
 
-- **Defined on lines:** 49–58
+- **Defined on lines:** 42–50
 - **Symbol kind:** class
 
+### Definition
+class Input(BaseModel):
+    file_path: str
+    code: str
 ### Purpose
-A Pydantic model to represent the input for a code summary.
+Represents the input to the summarization function.
 
 ### Details
-This class has fields for the file path and code of a code summary.
+Not specified.
 
 ### Usage
-To use this class, you can create an instance with the desired values and then access its fields as needed.
+To use this class, you need to create an instance with the desired values for each attribute.
 
 ---
 
 ## MAX_CONTEXT ![variable](https://img.shields.io/badge/variable-blue?style=flat)
 
-- **Defined on lines:** 60–61
+- **Defined on line:** 52
 - **Symbol kind:** variable
 
+### Definition
+MAX_CONTEXT = 32768 # 32.768 tokens
 ### Purpose
-The maximum context size for the Ollama AI model.
+The maximum context size for the summarization model.
 
 ### Details
-This variable is used to determine how much code can be processed at once by the Ollama AI model.
+Not specified.
 
 ### Usage
-To use this variable, you can access its value directly or modify it as needed.
+To use this variable, you need to assign it a value before calling the `summarize_code` function.
 
 ---
 
 ## ollama ![variable](https://img.shields.io/badge/variable-blue?style=flat)
 
-- **Defined on lines:** 63–64
+- **Defined on line:** 54
 - **Symbol kind:** variable
 
+### Definition
+ollama = AsyncClient()
 ### Purpose
-An instance of the Ollama AI client.
+The Ollama AI client.
 
 ### Details
-This variable is used to interact with the Ollama AI model and generate summaries of code symbols.
+Not specified.
 
 ### Usage
-To use this variable, you can access its methods and properties as needed.
+To use this variable, you need to create an instance of the `AsyncClient` class before calling the `summarize_code` function.
 
 ---
 
 ## OPTIONS ![variable](https://img.shields.io/badge/variable-blue?style=flat)
 
-- **Defined on lines:** 65–70
+- **Defined on lines:** 56–59
 - **Symbol kind:** variable
 
+### Definition
+OPTIONS = {
+    "temperature": 0.1,
+    "num_ctx": MAX_CONTEXT, 
+
+}
 ### Purpose
-The options for the Ollama AI model.
+The options for the summarization model.
 
 ### Details
-This variable is used to configure the behavior of the Ollama AI model when generating summaries of code symbols.
+Not specified.
 
 ### Usage
-To use this variable, you can access its values directly or modify it as needed.
+To use this variable, you need to assign it a value before calling the `summarize_code` function.
 
 ---
 
 ## summarize_code_in_chunk ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 72–104
+- **Defined on lines:** 61–90
 - **Symbol kind:** function
 
+### Definition
+async def summarize_code_in_chunk(input: Input) -> Documentation:
+    prompt = BASE_PROMPT + "\n\nINPUT:\n\n" + input.model_dump_json(indent=2)
+    resp = await ollama.generate(MODEL,
+                                 prompt=prompt,
+                                 options=OPTIONS,
+                                 format="json")
+    
+    # parsed = json.loads(resp.response)
+    # with open("model_answers.log", "a") as f:
+    #     json.dump(parsed, f, indent=2)
+    #     f.write("\n")
+
+    response = Documentation.model_validate_json(resp.response)
+
+    return response
 ### Purpose
-A function to summarize a chunk of code symbols using the Ollama AI model.
+Summarizes a code chunk using the Ollama AI model.
 
 ### Details
-This function takes an `Input` object as input and generates a summary of the code symbols in that chunk using the Ollama AI model. It returns a `Documentation` object containing the summary.
+Not specified.
 
 ### Usage
-To use this function, you can create an `Input` object with the desired values and then call the function with it.
+To use this function, you need to create an instance of the `Input` class with the desired values for each attribute and call the function with it.
 
 ---
 
 ## summarize_code ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 106–145
+- **Defined on lines:** 92–140
 - **Symbol kind:** function
 
+### Definition
+async def summarize_code(input: Input) -> Documentation:
+    code = input.code
+    if len(code) > MAX_CONTEXT:
+        codes = [
+            Input(file_path=input.file_path,
+                  code=code[i:i+MAX_CONTEXT])
+            for i in range(0, len(code), MAX_CONTEXT)
+        ]
+    
+        doc = Documentation(overview="",
+                            symbols=[], language="", key_components=[], requirements=[], usage="")
+        for chunk_input in tqdm_asyncio(codes, desc="Summarizing code chunks", unit="chunk"):
+            chunk_doc = await summarize_code_in_chunk(chunk_input)
+            if not doc.language:
+                doc.language = chunk_doc.language
+            doc.overview += chunk_doc.overview + "\n"
+            doc.symbols.extend(chunk_doc.symbols)
+        
+        return doc
+    
+    return await summarize_code_in_chunk(input)
 ### Purpose
-A function to summarize a code summary using the Ollama AI model.
+Summarizes a code file using the Ollama AI model.
 
 ### Details
-This function takes an `Input` object as input and generates a summary of the code symbols in that code summary using the Ollama AI model. It returns a `Documentation` object containing the summary.
+Not specified.
 
 ### Usage
-To use this function, you can create an `Input` object with the desired values and then call the function with it.
+To use this function, you need to create an instance of the `Input` class with the desired values for each attribute and call the function with it.
 
 ---
