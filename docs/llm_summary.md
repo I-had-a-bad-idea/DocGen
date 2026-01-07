@@ -1,5 +1,5 @@
 # **Documentation for `llm_summary.py`**
-> _Generated on 2026-01-06 14:43:45_
+> _Generated on 2026-01-07 15:39:33_
 
 > _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_
 
@@ -23,7 +23,7 @@
 ---
 
 # Overview
-This file contains a Python script that uses the Ollama API to generate summaries of code symbols based on structured JSON input.			
+This file contains a Python script that uses the Ollama API to generate summaries of code snippets. It includes functions for summarizing code in chunks and handling large inputs.			
 **Language**: python
 
 ## Key components
@@ -44,7 +44,7 @@ Ollama API,
 Pydantic library,
 TQDM library
 ## Usage
-To use this file, you need to have the Ollama API installed and running. You can then call the `summarize_code` function with an `Input` object containing the file path and code as arguments.
+To use this script, you need to have the Ollama API installed and running. You can then call the `summarize_code` function with an `Input` object containing the file path and code to be summarized.
 
 ---
 
@@ -58,16 +58,17 @@ To use this file, you need to have the Ollama API installed and running. You can
 - **Symbol kind:** class
 
 ### Definition
+```python
 from ollama import AsyncClient
-
+```
 ### Purpose
 An asynchronous client for interacting with the Ollama API.
 
 ### Details
-This class provides methods for making requests to the Ollama API and handling responses.
+This class is used to make requests to the Ollama API and handle responses asynchronously.
 
 ### Usage
-To use this class, you need to create an instance of it and call its methods.
+To use this class, you need to create an instance of it and call its methods to interact with the API.
 
 ---
 
@@ -77,16 +78,17 @@ To use this class, you need to create an instance of it and call its methods.
 - **Symbol kind:** class
 
 ### Definition
+```python
 from pydantic import BaseModel
-
+```
 ### Purpose
-A base class for creating Pydantic models.
+A base class for Pydantic models.
 
 ### Details
 This class provides a framework for defining data models with validation and serialization capabilities.
 
 ### Usage
-To use this class, you need to create a subclass of it and define its fields.
+To use this class, you need to create a subclass of it and define the fields that make up your model.
 
 ---
 
@@ -96,16 +98,17 @@ To use this class, you need to create a subclass of it and define its fields.
 - **Symbol kind:** module
 
 ### Definition
+```python
 import tqdm.asyncio
-
+```
 ### Purpose
 A module for adding progress bars to asynchronous code.
 
 ### Details
-This module provides a `tqdm` function that can be used to add progress bars to asynchronous loops.
+This module provides a simple way to add progress bars to asynchronous loops, making it easier to monitor the progress of long-running tasks.
 
 ### Usage
-To use this module, you need to import it and call its functions.
+To use this module, you need to import it and call its functions within an asynchronous loop.
 
 ---
 
@@ -115,16 +118,17 @@ To use this module, you need to import it and call its functions.
 - **Symbol kind:** module
 
 ### Definition
+```python
 import json
-
+```
 ### Purpose
-A module for working with JSON data.
+A module for encoding and decoding JSON data.
 
 ### Details
-This module provides functions for encoding and decoding JSON data.
+This module provides functions for converting Python objects to JSON strings and vice versa, making it easy to serialize and deserialize data.
 
 ### Usage
-To use this module, you need to import it and call its functions.
+To use this module, you need to import it and call its functions to encode or decode JSON data.
 
 ---
 
@@ -134,26 +138,17 @@ To use this module, you need to import it and call its functions.
 - **Symbol kind:** class
 
 ### Definition
+```python
 class SymbolOutput(BaseModel):
-    name: str
-    kind: str
-    start_line: int
-    end_line: int
-    definition: str
-    parent: str
-    purpose: str
-    details: str
-    usage: str
-    limitations: list[str]
-
+```
 ### Purpose
 A Pydantic model for representing a code symbol.
 
 ### Details
-This class defines the fields that represent a code symbol, including its name, kind, start and end lines, definition, parent, purpose, details, usage, and limitations.
+This class defines the structure of a code symbol, including its name, kind, start and end lines, definition, parent, purpose, details, usage, and limitations.
 
 ### Usage
-To use this class, you need to create an instance of it and define its fields.
+To use this class, you need to create an instance of it and define the fields that make up your symbol.
 
 ---
 
@@ -163,22 +158,17 @@ To use this class, you need to create an instance of it and define its fields.
 - **Symbol kind:** class
 
 ### Definition
+```python
 class Documentation(BaseModel):
-    overview: str
-    language: str
-    key_components: list[str]
-    requirements: list[str]
-    usage: str
-    symbols: list[SymbolOutput]
-
+```
 ### Purpose
-A Pydantic model for representing the documentation of code.
+A Pydantic model for representing the documentation of a code summary.
 
 ### Details
-This class defines the fields that represent the documentation of code, including its overview, language, key components, requirements, usage, and a list of symbols.
+This class defines the structure of the documentation, including its overview, language, key components, requirements, usage, and symbols.
 
 ### Usage
-To use this class, you need to create an instance of it and define its fields.
+To use this class, you need to create an instance of it and define the fields that make up your documentation.
 
 ---
 
@@ -188,18 +178,17 @@ To use this class, you need to create an instance of it and define its fields.
 - **Symbol kind:** class
 
 ### Definition
+```python
 class Input(BaseModel):
-    file_path: str
-    code: str
-
+```
 ### Purpose
-A Pydantic model for representing input to the summarization function.
+A Pydantic model for representing the input to the summarization function.
 
 ### Details
-This class defines the fields that represent input to the summarization function, including its file path and code.
+This class defines the structure of the input, including its file path and code.
 
 ### Usage
-To use this class, you need to create an instance of it and define its fields.
+To use this class, you need to create an instance of it and define the fields that make up your input.
 
 ---
 
@@ -209,16 +198,17 @@ To use this class, you need to create an instance of it and define its fields.
 - **Symbol kind:** variable
 
 ### Definition
+```python
 MAX_CONTEXT = 32768 # 32.768 tokens
-
+```
 ### Purpose
-The maximum context size for the summarization function.
+A constant representing the maximum context size for summarization.
 
 ### Details
 This variable defines the maximum number of tokens that can be processed in a single request to the Ollama API.
 
 ### Usage
-To use this variable, you need to reference it when calling the `summarize_code` function.
+To use this variable, you need to reference it within your code to set the maximum context size for summarization.
 
 ---
 
@@ -228,110 +218,76 @@ To use this variable, you need to reference it when calling the `summarize_code`
 - **Symbol kind:** variable
 
 ### Definition
+```python
 ollama = AsyncClient()
-
+```
 ### Purpose
-An instance of the `AsyncClient` class for interacting with the Ollama API.
+An instance of the AsyncClient class for interacting with the Ollama API.
 
 ### Details
-This variable holds an instance of the `AsyncClient` class, which can be used to make requests to the Ollama API.
+This variable initializes an instance of the AsyncClient class, which is used to make requests to the Ollama API.
 
 ### Usage
-To use this variable, you need to reference it when calling the `summarize_code` function.
+To use this variable, you need to reference it within your code to interact with the Ollama API.
 
 ---
 
 ## OPTIONS ![variable](https://img.shields.io/badge/variable-blue?style=flat)
 
-- **Defined on lines:** 56–59
+- **Defined on lines:** 56–58
 - **Symbol kind:** variable
 
 ### Definition
+```python
 OPTIONS = {
-    "temperature": 0.1,
-    "num_ctx": MAX_CONTEXT, 
-
-}
-
+```
 ### Purpose
-The options for the summarization function.
+A dictionary containing the options for making requests to the Ollama API.
 
 ### Details
-This variable holds a dictionary of options that can be used when making requests to the Ollama API.
+This variable defines a dictionary of options that can be used when making requests to the Ollama API, including the temperature and maximum context size.
 
 ### Usage
-To use this variable, you need to reference it when calling the `summarize_code` function.
+To use this variable, you need to reference it within your code to set the options for making requests to the Ollama API.
 
 ---
 
 ## summarize_code_in_chunk ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 61–90
+- **Defined on lines:** 60–123
 - **Symbol kind:** function
 
 ### Definition
+```python
 async def summarize_code_in_chunk(input: Input) -> Documentation:
-    prompt = BASE_PROMPT + "\n\nINPUT:\n\n" + input.model_dump_json(indent=2)
-    resp = await ollama.generate(MODEL,
-                                 prompt=prompt,
-                                 options=OPTIONS,
-                                 format="json")
-
-    # parsed = json.loads(resp.response)
-    # with open("model_answers.log", "a") as f:
-    #     json.dump(parsed, f, indent=2)
-    #     f.write("\n")
-
-    response = Documentation.model_validate_json(resp.response)
-
-    return response
-
+```
 ### Purpose
-A function for summarizing code in a chunk.
+A function for summarizing a code chunk using the Ollama API.
 
 ### Details
-This function takes an `Input` object as input and uses the Ollama API to generate a summary of the code. The summary is returned as a `Documentation` object.
+This function takes an `Input` object as input and uses it to generate a summary of the code using the Ollama API. It returns a `Documentation` object containing the summary.
 
 ### Usage
-To use this function, you need to call it with an `Input` object containing the file path and code as arguments.
+To use this function, you need to create an instance of the `Input` class and pass it to the function.
 
 ---
 
 ## summarize_code ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 92–130
+- **Defined on lines:** 125–190
 - **Symbol kind:** function
 
 ### Definition
+```python
 async def summarize_code(input: Input) -> Documentation:
-    code = input.code
-    if len(code) > MAX_CONTEXT:
-        codes = [
-            Input(file_path=input.file_path,
-                  code=code[i:i+MAX_CONTEXT])
-            for i in range(0, len(code), MAX_CONTEXT)
-        ]
-    
-        doc = Documentation(overview="",
-                            symbols=[], language="", key_components=[], requirements=[], usage="")
-        for chunk_input in tqdm_asyncio(codes, desc="Summarizing code chunks", unit="chunk"):
-            chunk_doc = await summarize_code_in_chunk(chunk_input)
-            if not doc.language:
-                doc.language = chunk_doc.language
-            doc.overview += chunk_doc.overview + "\n"
-            doc.symbols.extend(chunk_doc.symbols)
-        
-        return doc
-    
-    return await summarize_code_in_chunk(input)
-
+```
 ### Purpose
-A function for summarizing code.
+A function for summarizing a large code input using the Ollama API.
 
 ### Details
-This function takes an `Input` object as input and uses the Ollama API to generate a summary of the code. If the code is too long, it splits it into chunks and summarizes each chunk separately. The summaries are then combined into a single `Documentation` object.
+This function takes an `Input` object as input and uses it to generate a summary of the code using the Ollama API. If the code is too long, it splits it into chunks and summarizes each chunk separately before combining the results.
 
 ### Usage
-To use this function, you need to call it with an `Input` object containing the file path and code as arguments.
+To use this function, you need to create an instance of the `Input` class and pass it to the function.
 
 ---

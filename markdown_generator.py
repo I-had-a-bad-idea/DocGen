@@ -50,12 +50,12 @@ def generate_markdown_from_doc(doc: Documentation, header: str) -> str:
     md_lines.append("") # Spacing
 
     for s in doc.symbols:
-        md_lines.extend(generate_md_for_symbol(s))
+        md_lines.extend(generate_md_for_symbol(s, doc.language))
 
     return "\n".join(md_lines)
 
 
-def generate_md_for_symbol(s: SymbolOutput) -> list[str]:
+def generate_md_for_symbol(s: SymbolOutput, lang: str) -> list[str]:
     md = []
 
     # Strong heading
@@ -75,7 +75,9 @@ def generate_md_for_symbol(s: SymbolOutput) -> list[str]:
     md.append("")
 
     md.append("### Definition")
-    md.append(s.definition)
+    md.append(f"```{lang}")
+    md.append(s.definition.split("\n")[0])
+    md.append("```")
 
     # Semantic sections
     md.append("### Purpose")
