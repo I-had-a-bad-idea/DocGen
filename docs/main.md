@@ -1,5 +1,5 @@
 # **Documentation for `main.py`**
-> _Generated on 2026-01-06 14:37:44_
+> _Generated on 2026-01-06 14:43:45_
 
 > _Generated with [DocGen](https://github.com/I-had-a-bad-idea/DocGen), may include wrong information!_
 
@@ -42,14 +42,17 @@ generate_docs,
 load_docgen_ignore,
 main
 ## Requirements
-Python installed,
-markdown_generator module installed,
-tqdm and tqdm_asyncio modules installed,
-asyncio library installed
+Python 3.7 or later,
+markdown_generator library,
+tqdm library,
+asyncio library,
+pathlib library
 ## Usage
-To use this script, run it from the command line with a folder path as an argument. For example:
+To use this script, run the following command in your terminal:
 
-python main.py /path/to/folder
+python main.py path_to_folder
+
+This will generate documentation for all supported files in the specified folder and its subfolders.
 
 ---
 
@@ -68,21 +71,23 @@ queue = set()
 A set to store file paths that need documentation generated.
 
 ### Details
-Not specified.
+This set is used to keep track of all files that are eligible for documentation generation. It ensures that each file is processed only once.
 
 ### Usage
-Used in the `generate_docs` function to keep track of files to process.
+The queue is populated by the `get_files_for_path` function and then used in the `generate_docs` function to process each file.
+
+### Limitations
+- Files added to the queue may not be processed if they are ignored due to language or folder settings.
 
 ---
 
 ## LANGUAGES ![dict](https://img.shields.io/badge/dict-gray?style=flat)
 
-- **Defined on lines:** 3–45
+- **Defined on lines:** 3–54
 - **Symbol kind:** dict
 
 ### Definition
 LANGUAGES = {
-    # Python
     ".py": "Python",
     ".pyw": "Python",
     ".pyi": "Python (type hints)",
@@ -171,55 +176,64 @@ LANGUAGES = {
 }
 
 ### Purpose
-A dictionary mapping file extensions to their corresponding programming languages.
+A dictionary that maps file extensions to their corresponding programming languages.
 
 ### Details
-Not specified.
+This dictionary is used to determine the language of a given file based on its extension. It helps in identifying which functions or classes are available for documentation generation.
 
 ### Usage
-Used in the `is_supported_language` function to determine if a file is supported.
+The `is_supported_language` function uses this dictionary to check if a file should be processed.
+
+### Limitations
+- The dictionary may not cover all possible programming languages, and additional entries may need to be added as new languages are supported.
 
 ---
 
 ## ignored_languages ![list](https://img.shields.io/badge/list-gray?style=flat)
 
-- **Defined on lines:** 47–48
+- **Defined on lines:** 56–57
 - **Symbol kind:** list
 
 ### Definition
 ignored_languages = []
 ### Purpose
-A list of file extensions to ignore.
+A list to store file extensions that should be ignored during documentation generation.
 
 ### Details
-Not specified.
+This list is used to exclude certain files from being processed. It helps in maintaining a clean and organized project structure.
 
 ### Usage
-Used in the `is_supported_language` function to determine if a file is supported.
+The `is_supported_language` function uses this list to check if a file should be processed.
+
+### Limitations
+- Files added to the ignored_languages list may still be processed if they are not supported by any other language or folder settings.
 
 ---
 
 ## ignored_folders ![list](https://img.shields.io/badge/list-gray?style=flat)
 
-- **Defined on lines:** 49–50
+- **Defined on lines:** 59–60
 - **Symbol kind:** list
 
 ### Definition
 ignored_folders = []
 ### Purpose
-A list of folder names to ignore.
+A list to store folder names that should be ignored during documentation generation.
 
 ### Details
-Not specified.
+This list is used to exclude certain folders from being processed. It helps in maintaining a clean and organized project structure.
 
 ### Usage
-Used in the `is_allowed_folder` function to determine if a folder is allowed.
+The `is_allowed_folder` function uses this list to check if a folder should be processed.
+
+### Limitations
+- Folders added to the ignored_folders list may still be processed if they are not supported by any other language or file settings.
 
 ---
 
 ## is_supported_language ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 52–61
+- **Defined on lines:** 62–75
 - **Symbol kind:** function
 
 ### Definition
@@ -231,19 +245,22 @@ def is_supported_language(file_path: str) -> bool:
     
     return LANGUAGES.get(suffix) != None
 ### Purpose
-Checks if a file is supported based on its extension.
+A function to check if a file is supported for documentation generation.
 
 ### Details
-Not specified.
+This function checks if the file extension is in the `ignored_languages` list or not. If it is, the function returns False indicating that the file should be ignored. Otherwise, it checks if the file extension exists in the `LANGUAGES` dictionary and returns True if it does.
 
 ### Usage
-Used in the `get_files_for_folder` function to filter files by language.
+The function is called by the `get_files_for_path` function to determine which files need documentation generation.
+
+### Limitations
+- The function may not handle all possible file extensions correctly, and additional entries may need to be added to the `LANGUAGES` dictionary as new languages are supported.
 
 ---
 
 ## is_allowed_folder ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 63–72
+- **Defined on lines:** 78–91
 - **Symbol kind:** function
 
 ### Definition
@@ -254,19 +271,22 @@ def is_allowed_folder(folder_path: str) -> bool:
             return False
     return True
 ### Purpose
-Checks if a folder is allowed based on its name and parent folders.
+A function to check if a folder is allowed for documentation generation.
 
 ### Details
-Not specified.
+This function checks if the folder name exists in the `ignored_folders` list. If it does, the function returns False indicating that the folder should be ignored. Otherwise, it checks if any of the parent folders contain an entry from the `ignored_folders` list and returns True if they do not.
 
 ### Usage
-Used in the `get_files_for_folder` function to filter folders by name and location.
+The function is called by the `get_files_for_folder` function to determine which folders need documentation generation.
+
+### Limitations
+- The function may not handle all possible folder names correctly, and additional entries may need to be added to the `ignored_folders` list as new folders are supported.
 
 ---
 
 ## get_code_from_file ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 74–85
+- **Defined on lines:** 94–107
 - **Symbol kind:** function
 
 ### Definition
@@ -279,19 +299,22 @@ def get_code_from_file(file_path: str) -> str:
         print(f"Error reading file {file_path}: {e}")
         return ""
 ### Purpose
-Reads the content of a file.
+A function to read the content of a file.
 
 ### Details
-Not specified.
+This function attempts to open and read the contents of a file specified by `file_path`. If successful, it returns the code as a string. If an error occurs during reading, it prints an error message and returns an empty string.
 
 ### Usage
-Used in the `generate_docs_for_file` function to get the code from a file.
+The function is called by the `generate_docs_for_file` function to get the code for a given file.
+
+### Limitations
+- The function may not handle all possible errors correctly, such as permission issues or invalid file paths.
 
 ---
 
 ## generate_docs_for_file ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 87–102
+- **Defined on lines:** 109–124
 - **Symbol kind:** function
 
 ### Definition
@@ -304,19 +327,22 @@ async def generate_docs_for_file(file_path):
     if code:
         await generate_markdown(file_path, code)
 ### Purpose
-Generates documentation for a single file.
+An asynchronous function to generate documentation for a given file.
 
 ### Details
-Not specified.
+This function first checks if the specified `file_path` is a valid file. If it is not, it prints an error message and returns. Otherwise, it reads the file content using the `get_code_from_file` function and generates documentation using the `generate_markdown` function if the code is available.
 
 ### Usage
-Used in the `generate_docs` function to process each file in the queue.
+The function is called by the `asyncio.run(get_files_for_path(path))` in the `main` function to process each file in the queue.
+
+### Limitations
+- The function may not handle all possible errors correctly, such as permission issues or invalid file paths.
 
 ---
 
 ## get_files_for_folder ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 104–132
+- **Defined on lines:** 126–153
 - **Symbol kind:** function
 
 ### Definition
@@ -337,19 +363,22 @@ async def get_files_for_folder(folder_path):
             if is_allowed_folder(element_path):
                 await get_files_for_folder(element_path)
 ### Purpose
-Recursively retrieves files from a folder and its subfolders.
+An asynchronous function to recursively search for files in a given folder.
 
 ### Details
-Not specified.
+This function first checks if the specified `folder_path` is a valid directory. If it is not, it prints an error message and returns. Otherwise, it lists all elements in the directory using `os.listdir`. It then iterates over each element, checking if it is a file or a folder. If it is a file, it checks if the file extension is supported by calling the `is_supported_language` function. If it is supported, the file path is added to the `queue`. If it is a folder, it checks if the folder name is allowed by calling the `is_allowed_folder` function. If the folder is allowed, the function calls itself recursively to process the subfolder.
 
 ### Usage
-Used in the `get_files_for_path` function to find all supported files in a directory.
+The function is called by the `asyncio.run(get_files_for_path(path))` in the `main` function to populate the queue with all eligible files and folders.
+
+### Limitations
+- The function may not handle all possible errors correctly, such as permission issues or invalid folder paths.
 
 ---
 
 ## get_files_for_path ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 134–150
+- **Defined on lines:** 155–172
 - **Symbol kind:** function
 
 ### Definition
@@ -361,19 +390,22 @@ async def get_files_for_path(path):
         if is_supported_language(path):
             queue.add(path)
 ### Purpose
-Recursively retrieves files from a path, including subdirectories.
+An asynchronous function to recursively search for files in a given path.
 
 ### Details
-Not specified.
+This function first checks if the specified `path` is a valid directory. If it is, it loads any `.docgen_ignore` file and then calls the `get_files_for_folder` function to process all files and folders within the directory. If the path is a file, it checks if the file extension is supported by calling the `is_supported_language` function. If it is supported, the file path is added to the `queue`. This function is called by the `main` function to populate the queue with all eligible files.
 
 ### Usage
-Used in the `main` function to start processing files.
+The function is called by the `main` function to initialize the queue with all eligible files and folders.
+
+### Limitations
+- The function may not handle all possible errors correctly, such as permission issues or invalid paths.
 
 ---
 
 ## generate_docs ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 152–160
+- **Defined on lines:** 174–189
 - **Symbol kind:** function
 
 ### Definition
@@ -383,19 +415,22 @@ async def generate_docs():
     for task in tqdm_asyncio.as_completed(tasks, total=len(tasks), desc="Processing files", unit="file"):
         await task
 ### Purpose
-Asynchronously processes all files in the queue.
+An asynchronous function to generate documentation for all files in the queue.
 
 ### Details
-Not specified.
+This function creates a list of tasks by calling `generate_docs_for_file` for each file path in the `queue`. It then uses `asyncio.as_completed` to process each task asynchronously. The progress is displayed using `tqdm_asyncio`, and the function waits for all tasks to complete before returning.
 
 ### Usage
-Used in the `main` function to start generating documentation.
+The function is called by the `main` function to generate documentation for all files in the queue.
+
+### Limitations
+- The function may not handle all possible errors correctly, such as permission issues or invalid file paths.
 
 ---
 
 ## load_docgen_ignore ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 162–180
+- **Defined on lines:** 192–208
 - **Symbol kind:** function
 
 ### Definition
@@ -412,19 +447,22 @@ def load_docgen_ignore(folder: str):
             elif line.startswith("."):
                 ignored_languages.append(line.strip())
 ### Purpose
-Loads the .docgen_ignore file to add additional folders and languages to ignore.
+A function to load `.docgen_ignore` files and update the `ignored_languages` and `ignored_folders` lists.
 
 ### Details
-Not specified.
+This function first constructs the path to the `.docgen_ignore` file in the specified `folder`. If the file does not exist, it returns. Otherwise, it opens the file and reads each line. For each line, it checks if the line ends with a slash (`/`). If it does, it adds the folder name (excluding the trailing slash) to the `ignored_folders` list. If the line starts with a dot (`.`), it adds the language extension (excluding the leading dot) to the `ignored_languages` list.
 
 ### Usage
-Used in the `get_files_for_folder` function to load custom ignore rules.
+The function is called by the `get_files_for_path` function to load any `.docgen_ignore` files and update the queue accordingly.
+
+### Limitations
+- The function may not handle all possible errors correctly, such as permission issues or invalid file paths.
 
 ---
 
 ## main ![function](https://img.shields.io/badge/function-green?style=flat)
 
-- **Defined on lines:** 182–204
+- **Defined on lines:** 210–235
 - **Symbol kind:** function
 
 ### Definition
@@ -437,12 +475,15 @@ def main():
     else:
         print("Usage: python main.py path_to_folder")
 ### Purpose
-The entry point of the script, which processes a folder and generates documentation.
+The entry point of the script.
 
 ### Details
-Not specified.
+This function checks if a command-line argument is provided. If it is, it calls `get_files_for_path` and `generate_docs` asynchronously to process all eligible files and generate documentation. If no argument is provided, it prints usage instructions.
 
 ### Usage
-To use this script, run it from the command line with a folder path as an argument.
+The script should be run from the terminal with the path to the folder containing the code as an argument.
+
+### Limitations
+- The function may not handle all possible errors correctly, such as invalid command-line arguments or permission issues.
 
 ---
