@@ -35,7 +35,7 @@ Install python dependencies
 
 ```bash
 
-pip install tree_sitter_language-pack datetime ollama tqdm pydantic
+pip install datetime ollama tqdm pydantic
 
 ```
 ### Olama + Model
